@@ -1,0 +1,132 @@
+{
+  "summary": {
+    "title": "Fintech Cloud Payments App",
+    "owner": "Student",
+    "description": "Threat model of a fintech cloud app processing payments using STRIDE.",
+    "id": "1",
+    "version": "1.0"
+  },
+  "detail": {
+    "diagrams": [
+      {
+        "title": "Payments Data Flow",
+        "id": "d1",
+        "diagramJson": {
+          "cells": [
+            {
+              "type": "tm.Actor",
+              "id": "client1",
+              "x": 50,
+              "y": 100,
+              "text": "Web Client"
+            },
+            {
+              "type": "tm.Actor",
+              "id": "client2",
+              "x": 50,
+              "y": 200,
+              "text": "Mobile App"
+            },
+            {
+              "type": "tm.Actor",
+              "id": "admin",
+              "x": 50,
+              "y": 300,
+              "text": "Admin User"
+            },
+            {
+              "type": "tm.Actor",
+              "id": "processor",
+              "x": 600,
+              "y": 150,
+              "text": "Payment Processor"
+            },
+            {
+              "type": "tm.Process",
+              "id": "waf",
+              "x": 200,
+              "y": 150,
+              "text": "CDN/WAF"
+            },
+            {
+              "type": "tm.Process",
+              "id": "api",
+              "x": 350,
+              "y": 150,
+              "text": "API Gateway"
+            },
+            {
+              "type": "tm.Process",
+              "id": "auth",
+              "x": 350,
+              "y": 250,
+              "text": "Auth Service"
+            },
+            {
+              "type": "tm.Process",
+              "id": "payments",
+              "x": 500,
+              "y": 200,
+              "text": "Payments Service"
+            },
+            {
+              "type": "tm.Store",
+              "id": "db",
+              "x": 650,
+              "y": 250,
+              "text": "Payments DB"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "client1",
+              "target": "waf",
+              "text": "HTTPS"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "client2",
+              "target": "waf",
+              "text": "HTTPS"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "admin",
+              "target": "api",
+              "text": "HTTPS (Admin Portal)"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "waf",
+              "target": "api",
+              "text": "Forward traffic"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "api",
+              "target": "auth",
+              "text": "Auth requests"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "api",
+              "target": "payments",
+              "text": "Payment requests"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "payments",
+              "target": "processor",
+              "text": "mTLS to processor"
+            },
+            {
+              "type": "tm.Flow",
+              "source": "payments",
+              "target": "db",
+              "text": "Encrypted DB writes"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

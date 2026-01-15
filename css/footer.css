@@ -1,0 +1,133 @@
+/* Footer Base */
+.footer {
+    background: #0c0c0c;
+    padding: 70px 5%;
+    color: #ccc;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+/* Sections */
+.footer-section h3,
+.logo {
+    color: #00ff88;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #0ae76d;
+}
+
+.footer-section p {
+    max-width: 350px;
+    line-height: 1.6;
+}
+
+/* Social Icons */
+.social-icons a {
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 20px;
+    color: white;
+    background: #1a1a1a;
+    padding: 12px;
+    border-radius: 50%;
+    transition: .3s;
+}
+
+.social-icons a:hover {
+    background: #00ff88;
+    color: black;
+}
+
+/* Lists */
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.footer-section ul li a:hover {
+    color: #00ff88;
+    padding-left: 5px;
+}
+
+/* Contact Items */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ccc;
+    margin: 20px 0;
+}
+
+.contact-item i {
+    color: #00ff88;
+    font-size: 20px;
+}
+
+.contact-item a {
+    color: #ccc;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.contact-item a:hover {
+    color: #00ff88;
+}
+
+.contact-item a p {
+    margin: 0;
+    color: inherit;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background: #133b2c;
+    margin: 10px 0;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.bottom-bar span {
+    color: #00ff88;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .footer-container {
+        flex-direction: column;
+    }
+
+    .bottom-bar {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

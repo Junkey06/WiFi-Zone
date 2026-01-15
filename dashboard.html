@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icon Font Stylesheet -->
+  <link rel="stylesheet" href="fontawesome/all.min.css">
+  <link rel="stylesheet" href="bootstrap-icons/bootstrap-icons.css">
+
+  <!-- Mini Bootstrap-like Stylesheet (custom) -->
+  <link href="css/mini-bootstrap.css" rel="stylesheet">
+
+  <!-- Template Stylesheets (site-wide) -->
+  <link href="css/styles.css" rel="stylesheet">
+  <link href="css/footer.css" rel="stylesheet">
+  <link href="css/navbartest.css" rel="stylesheet">
+  <link href="css/paymentmodal.css" rel="stylesheet">
+  <link href="css/loginmodal.css" rel="stylesheet">
+  <link href="css/mobile.css" rel="stylesheet">
+
+  <!-- Dashboard specific overrides -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/topbar.css">
+</head>
+<body>
+
+
+  <!-- OFFER DETAILS MODAL -->
+      <div id="offerDetailsModal" class="modal" style="display:none;">
+        <div class="modal-dialog offer-details-box">
+          <div class="offer-details-content">
+
+            <button class="close-offer-details" aria-label="Fermer">&times;</button>
+
+            <div class="offer-details-grid">
+              <div class="offer-media">
+                <div class="od-icon"><i class="bi bi-gift-fill"></i></div>
+              </div>
+
+              <div class="offer-body">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h2 id="od_title" class="mb-1"></h2>
+                    <p id="od_subtitle" class="od-subtext mb-2"></p>
+                  </div>
+                  <div class="offer-price-badge"><span id="od_price"></span></div>
+                </div>
+
+                <div class="od-meta">
+                  <span class="offer-badge time"><i class="bi bi-clock"></i> <span id="od_duration"></span></span>
+                  <span class="offer-badge data"><i class="bi bi-hdd-network"></i> <span id="od_data"></span></span>
+                  <span class="offer-badge speed"><i class="bi bi-speedometer2"></i> <span id="od_speed"></span></span>
+                </div>
+
+                <div class="od-desc mt-3"><p id="od_description"></p></div>
+
+                <button id="od_pay_btn" class="btn btn-primary w-100 mt-4">Générer Le Ticket</button>
+                <small class="text-muted d-block mt-2">En cliquant, Le Ticket sera Générer.</small>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">📊 Admin</span>
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="active" href="dashboard.html"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
+      <a href="transactions.html"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
+      <a href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
+      <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
+      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Acceuille</span></a>
+    </nav>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="topbar">
+      <button id="mobileMenuToggle" class="mobile-menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <h1>Dashboard</h1>
+      <div class="user" id="topbarUser">
+        <button><span>John Doe</span>
+        <i class="fa fa-user" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <section id="dashboardStats" class="stats">
+      <div class="card blue">
+        <p>Total Balance</p>
+        <h2 id="soldeTotal">—</h2>
+      </div>
+      <div class="card green">
+        <p>Total Sales</p>
+        <h2 id="venteTotal">—</h2>
+      </div>
+      <div class="card purple">
+        <p>Total Earnings</p>
+        <h2 id="gainTotal">—</h2>
+      </div>
+    </section>
+
+    <section id="dashboardContent" class="content">
+
+      <!-- Packages (replaced with site offer tables) -->
+      <div class="box">
+        <h3>Offres — Particuliers (Extrait)</h3>
+        <h3 class="text-primary text-center mb-4">💨 Offres Express (Courte Durée)</h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="1" data-title="Express 1h" data-price="100 Fcfa" data-duration="1 heure" data-data="2 GB" data-description="Idéal pour les réseaux sociaux, WhatsApp et navigation rapide." data-slogan="Surf léger" data-speed="5">
+                <td>Surf léger</td>
+                <td>100 Fcfa</td>
+                <td>2 GB</td>
+                <td>5 Mbps</td>
+                <td>1h</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="2" data-title="Express 2h" data-price="150 Fcfa" data-duration="2 heures" data-data="Illimité*" data-description="Streaming musique, réseaux sociaux. 2h de liberté digitale !" data-slogan="Streaming audio" data-speed="10">
+                <td>Streaming audio</td>
+                <td>150 Fcfa</td>
+                <td>Illimité*</td>
+                <td>10 Mbps</td>
+                <td>2h</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="3" data-title="Express 3h" data-price="300 Fcfa" data-duration="3 heures" data-data="Illimité" data-description="YouTube, téléchargements légers. L'after-work connecté !" data-slogan="Surf &amp; vidéo" data-speed="20">
+                <td>Surf &amp; vidéo</td>
+                <td>300 Fcfa</td>
+                <td>Illimité</td>
+                <td>20 Mbps</td>
+                <td>3h</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="4" data-title="Express 5h" data-price="500 Fcfa" data-duration="5 heures" data-data="Illimité" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
+                <td>Journée connectée</td>
+                <td>500 Fcfa</td>
+                <td>Illimité</td>
+                <td>25 Mbps</td>
+                <td>5h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-primary text-center mb-4" style="padding-top: 20px;">☀️ Offres Journalières</h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="5" data-title="Journalière 10GB" data-price="700 Fcfa" data-duration="24 heures" data-data="10 GB" data-description="TikTok, YouTube, Netflix. Votre pass journée illimitée !" data-slogan="Journée Média" data-speed="25">
+                <td>Journée Média</td>
+                <td>700 Fcfa</td>
+                <td>10 GB</td>
+                <td>25 Mbps</td>
+                <td>24h</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="6" data-title="Journalière Illimité" data-price="1000 Fcfa" data-duration="24 heures" data-data="Illimité" data-description="4K Streaming, gaming online. 24h de folie numérique !" data-slogan="Illimité" data-speed="50">
+                <td>Illimité</td>
+                <td>1000 Fcfa</td>
+                <td>Illimité</td>
+                <td>50 Mbps</td>
+                <td>24h</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="7" data-title="Journalière Illimité HD" data-price="1500 Fcfa" data-duration="24 heures" data-data="Illimité HD" data-description="Ultra HD, téléchargements rapides. Le premium à petit prix" data-slogan="Ultra HD" data-speed="75">
+                <td>Ultra HD</td>
+                <td>1500 Fcfa</td>
+                <td>Illimité HD</td>
+                <td>75 Mbps</td>
+                <td>24h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-primary text-center mb-4" style="padding-top: 20px;">📅 Offres Hebdomadaires</h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="8" data-title="Hebdomadaire 50GB" data-price="2500 Fcfa" data-duration="7 jours" data-data="50 GB" data-description="Binge watching, gaming. Une semaine de connexion assurée" data-slogan="Semaine Média" data-speed="50">
+                <td>Semaine Média</td>
+                <td>2500 Fcfa</td>
+                <td>50 GB</td>
+                <td>50 Mbps</td>
+                <td>7j</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="9" data-title="Hebdomadaire Illimité" data-price="3500 Fcfa" data-duration="7 jours" data-data="Illimité" data-description="Famille, partage, divertissement. Votre semaine 100% connectée" data-slogan="Famille Illimitée" data-speed="100">
+                <td>Famille Illimitée</td>
+                <td>3500 Fcfa</td>
+                <td>Illimité</td>
+                <td>100 Mbps</td>
+                <td>7j</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="10" data-title="Hebdomadaire Illimité HD+" data-price="5000 Fcfa" data-duration="7 jours" data-data="Illimité HD+" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="200">
+                <td>Pro HD+</td>
+                <td>5000 Fcfa</td>
+                <td>Illimité HD+</td>
+                <td>200 Mbps</td>
+                <td>7j</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid #000000;">
+
+        <h3>Offres — Famille (Extrait)</h3>
+        <h3 class="text-primary text-center mb-4">💨 Famille Starter </h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="11" data-title="Famille Starter 1" data-price="6000 Fcfa" data-duration="1 mois" data-data="Illimité" data-description="Idéal pour les réseaux sociaux, WhatsApp et navigation rapide." data-slogan="Surf léger" data-speed="5">
+                <td>Surf léger</td>
+                <td>6000 Fcfa</td>
+                <td>Illimité</td>
+                <td>5 Mbps</td>
+                <td>1 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="12" data-title="Famille Starter 2" data-price="11000 Fcfa" data-duration="2 mois" data-data="Illimité" data-description="Streaming musique, réseaux sociaux. 2h de liberté digitale !" data-slogan="Streaming audio" data-speed="10">
+                <td>Streaming audio</td>
+                <td>11000 Fcfa</td>
+                <td>Illimité</td>
+                <td>10 Mbps</td>
+                <td>2 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="13" data-title="Famille Starter 3" data-price="15000 Fcfa" data-duration="3 mois" data-data="Illimité" data-description="YouTube, téléchargements légers. L'after-work connecté !" data-slogan="Surf &amp; vidéo" data-speed="20">
+                <td>Surf &amp; vidéo</td>
+                <td>15000 Fcfa</td>
+                <td>Illimité</td>
+                <td>20 Mbps</td>
+                <td>3 mois</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-primary text-center mb-4" style="padding-top: 20px;">📅 Famille Premium </h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="14" data-title="Famille Premium 1" data-price="20000 Fcfa" data-duration="3 mois" data-data="Illimité HD" data-description="Binge watching, gaming. Une semaine de connexion assurée" data-slogan="Semaine Média" data-speed="50">
+                <td>Semaine Média</td>
+                <td>20000 Fcfa</td>
+                <td>Illimité HD</td>
+                <td>50 Mbps</td>
+                <td>3 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="15" data-title="Famille Premium 2" data-price="35000 Fcfa" data-duration="6 mois" data-data="Illimité HD+" data-description="Famille, partage, divertissement. Votre semaine 100% connectée" data-slogan="Famille Illimitée" data-speed="100">
+                <td>Famille Illimitée</td>
+                <td>35000 Fcfa</td>
+                <td>Illimité HD+</td>
+                <td>100 Mbps</td>
+                <td>6 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="16" data-title="Famille Premium 3" data-price="60000 Fcfa" data-duration="12 mois" data-data="Illimité Max" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="200">
+                <td>Pro HD+</td>
+                <td>60000 Fcfa</td>
+                <td>Illimité Max</td>
+                <td>200 Mbps</td>
+                <td>12 mois</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid #000000;">
+
+        <h3>Offres — Entreprise (Extrait)</h3>
+        <h3 class="text-primary text-center mb-4">💼 Starter Business</h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="17" data-title="Starter Business 1 mois" data-price="7000 Fcfa" data-duration="1 mois" data-data="Illimité" data-description="Productivité garantie !" data-slogan="Productivité garantie !" data-speed="" data-devices="Email, visio, cloud illimité" data-offer-id="biz-starter-1m">
+                <td>« Productivité garantie ! »</td>
+                <td>7 000 Fcfa</td>
+                <td>Illimité</td>
+                <td>—</td>
+                <td>1 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="18" data-title="Starter Business 2 mois" data-price="12000 Fcfa" data-duration="2 mois" data-data="Illimité" data-description="Croissance digitale assurée" data-slogan="Croissance digitale assurée" data-speed="" data-devices="Équipe jusqu'à 5 personnes" data-offer-id="biz-starter-2m">
+                <td>« Croissance digitale assurée »</td>
+                <td>12 000 Fcfa</td>
+                <td>Illimité</td>
+                <td>—</td>
+                <td>2 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="19" data-title="Starter Business Pro 1 mois" data-price="15000 Fcfa" data-duration="1 mois" data-data="Illimité (Pro)" data-description="Le pro au service de votre biz" data-slogan="Le pro au service de votre biz" data-speed="" data-devices="Priorité réseau, support dédié" data-offer-id="biz-starter-pro-1m">
+                <td>« Le pro au service de votre biz »</td>
+                <td>15 000 Fcfa</td>
+                <td>Illimité (Pro)</td>
+                <td>—</td>
+                <td>1 mois</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-primary text-center mb-4" style="padding-top: 20px;">👑 Business Premium</h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="20" data-title="Business Premium 3 mois" data-price="25000 Fcfa" data-duration="3 mois" data-data="Illimité (Premium)" data-description="L'excellence en connexion" data-slogan="L'excellence en connexion" data-speed="" data-devices="Fibre optique incluse" data-offer-id="biz-premium-3m">
+                <td>« L'excellence en connexion »</td>
+                <td>25 000 Fcfa</td>
+                <td>Illimité (Premium)</td>
+                <td>—</td>
+                <td>3 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="21" data-title="Business Premium 6 mois" data-price="45000 Fcfa" data-duration="6 mois" data-data="Illimité (Premium+)" data-description="Votre succès, notre connexion" data-slogan="Votre succès, notre connexion" data-speed="" data-devices="Installation gratuite + maintenance" data-offer-id="biz-premium-6m">
+                <td>« Votre succès, notre connexion »</td>
+                <td>45 000 Fcfa</td>
+                <td>Illimité (Premium+)</td>
+                <td>—</td>
+                <td>6 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="22" data-title="Business Premium 12 mois" data-price="80000 Fcfa" data-duration="12 mois" data-data="Illimité Max" data-description="Partenaire de votre croissance" data-slogan="Partenaire de votre croissance" data-speed="" data-devices="Service client 24/7, backup" data-offer-id="biz-premium-12m">
+                <td>« Partenaire de votre croissance »</td>
+                <td>80 000 Fcfa</td>
+                <td>Illimité Max</td>
+                <td>—</td>
+                <td>12 mois</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-primary text-center mb-4" style="padding-top: 20px;">⚙️ Solutions Sur Mesure</h3>
+        <div class="table-responsive">
+          <table class="offer-table w-100">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Prix</th>
+                <th>Données</th>
+                <th>Vitesse</th>
+                <th>Durée</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="offer-row" data-idforfait="23" data-title="Sur Mesure 120k" data-price="120000 Fcfa" data-duration="12 mois" data-data="Illimité (Entreprise)" data-description="L'infrastructure de demain" data-slogan="L'infrastructure de demain" data-speed="" data-devices="Fibre + WiFi gestionnaire + sécurité" data-offer-id="sur-mesure-120k">
+                <td>« L'infrastructure de demain »</td>
+                <td>120 000 Fcfa</td>
+                <td>Illimité (Entreprise)</td>
+                <td>—</td>
+                <td>12 mois</td>
+              </tr>
+              <tr class="offer-row" data-idforfait="24" data-title="Sur Mesure Sur Devis" data-price="0 Fcfa" data-duration="Personnalisé" data-data="Illimité (Corporate)" data-description="Votre réseau, notre expertise" data-slogan="Votre réseau, notre expertise" data-speed="" data-devices="Multi-sites, VLAN, reporting avancé" data-offer-id="sur-mesure-devis">
+                <td>« Votre réseau, notre expertise »</td>
+                <td>Sur devis</td>
+                <td>Illimité (Corporate)</td>
+                <td>—</td>
+                <td>Personnalisé</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+</body>
+
+<script src="js/tabularform.js"></script>
+
+<script>
+  // Modern collapsible sidebar with mobile support
+  (function(){
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const overlay = document.getElementById('sidebarOverlay');
+    const body = document.body;
+
+    function isMobile() { return window.innerWidth <= 900; }
+
+    // Restore saved state on desktop
+    if (!isMobile() && localStorage.getItem('sidebarCollapsed') === '1') {
+      body.classList.add('sidebar-collapsed');
+    }
+
+    // Toggle sidebar (desktop: collapse, mobile: slide open)
+    function toggleSidebar(e) {
+      if (e) e.stopPropagation();
+      if (isMobile()) {
+        body.classList.toggle('sidebar-open');
+      } else {
+        const collapsed = body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+      }
+    }
+
+    toggle.addEventListener('click', toggleSidebar);
+    mobileToggle.addEventListener('click', toggleSidebar);
+
+    // Close mobile sidebar on overlay click
+    overlay.addEventListener('click', function() {
+      body.classList.remove('sidebar-open');
+    });
+
+    // Close mobile sidebar when clicking a nav link
+    sidebar.querySelectorAll('.sidebar-nav a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (isMobile()) body.classList.remove('sidebar-open');
+      });
+    });
+
+    // Handle resize: normalize classes
+    window.addEventListener('resize', function() {
+      if (isMobile()) {
+        body.classList.remove('sidebar-collapsed');
+      } else {
+        body.classList.remove('sidebar-open');
+      }
+    });
+  })();
+</script>
+
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+
+<!-- Ticket result popup CSS + HTML + JS -->
+<style>
+/* Ticket popup */
+.ticket-popup-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:99999;visibility:hidden;opacity:0;transition:opacity .22s,visibility .22s}
+.ticket-popup-overlay.show{visibility:visible;opacity:1}
+.ticket-popup{background:linear-gradient(135deg,#0f172a 0%,#0b2540 100%);color:#fff;border-radius:12px;padding:22px;max-width:420px;width:92%;box-shadow:0 18px 50px rgba(2,6,23,0.6);text-align:left}
+.ticket-popup .tp-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ticket-popup .tp-head .icon{background:linear-gradient(135deg,#06b6d4,#7c3aed);width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.ticket-popup h3{margin:0;font-size:1.05rem}
+.ticket-popup p{margin:6px 0 14px;color:rgba(255,255,255,0.9)}
+.tp-cred{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.tp-field{background:rgba(255,255,255,0.06);padding:10px 12px;border-radius:8px;font-family:inherit}
+.tp-actions{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.btn-copy{background:#fff;color:#0b2540;padding:8px 12px;border-radius:8px;font-weight:700;border:none;cursor:pointer}
+.btn-close-tp{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+.tp-small{font-size:0.88rem;color:rgba(255,255,255,0.7);margin-top:8px}
+</style>
+
+<!-- Ticket Popup HTML -->
+<div class="ticket-popup-overlay" id="ticketPopup">
+  <div class="ticket-popup" role="dialog" aria-modal="true" aria-labelledby="tpTitle">
+    <div class="tp-head">
+      <div class="icon"><i class="fa fa-ticket-alt" aria-hidden="true"></i></div>
+      <div>
+        <h3 id="tpTitle">Ticket généré</h3>
+        <div class="tp-small">Conservez ces identifiants pour vous connecter</div>
+      </div>
+    </div>
+    <p id="tpMsg">Voici vos identifiants :</p>
+    <div class="tp-cred">
+      <div class="tp-field" id="tpUsername">Nom d'utilisateur: —</div>
+      <button class="btn-copy" id="copyUser">Copier</button>
+    </div>
+    <div style="height:10px"></div>
+    <div class="tp-cred">
+      <div class="tp-field" id="tpPassword">Mot de passe: —</div>
+      <button class="btn-copy" id="copyPass">Copier</button>
+    </div>
+    <div class="tp-actions">
+      <button class="btn-close-tp" id="tpClose">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // assign idForfait to offer rows if missing and wire click-to-open modal
+  const rows = Array.from(document.querySelectorAll('.offer-row'));
+  let currentIdForfait = null;
+
+  function makeId(seed, i){
+    if(!seed) seed = 'offer';
+    // simple slug + index
+    return seed.toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + (i+1);
+  }
+
+  rows.forEach((r,i) => {
+    // ensure data-idforfait exists
+    if(!r.dataset.idforfait){
+      // prefer data-offer-id or data-title
+      const base = r.dataset.offerId || r.dataset.title || r.innerText.slice(0,20);
+      r.dataset.idforfait = makeId(base,i);
+    }
+
+    r.style.cursor = 'pointer';
+    r.addEventListener('click', function(){
+      // populate modal fields
+      const title = r.dataset.title || r.querySelector('td')?.innerText || 'Offre';
+      const price = r.dataset.price || r.cells && r.cells[1] && r.cells[1].innerText || '';
+      const data = r.dataset.data || r.dataset['data'] || '';
+      const duration = r.dataset.duration || '';
+      const desc = r.dataset.description || '';
+      const speed = r.dataset.speed || '';
+
+      const titleEl = document.getElementById('od_title');
+      const priceEl = document.getElementById('od_price');
+      const dataEl = document.getElementById('od_data');
+      const durEl = document.getElementById('od_duration');
+      const descEl = document.getElementById('od_description');
+      const speedEl = document.getElementById('od_speed');
+
+      if(titleEl) titleEl.textContent = title;
+      if(priceEl) priceEl.textContent = price;
+      if(dataEl) dataEl.textContent = data;
+      if(durEl) durEl.textContent = duration;
+      if(descEl) descEl.textContent = desc;
+      if(speedEl) speedEl.textContent = speed;
+
+      // store current id
+      currentIdForfait = r.dataset.idforfait;
+
+      // show offer modal (existing modal uses id 'offerDetailsModal')
+      const modal = document.getElementById('offerDetailsModal');
+      if(modal) modal.style.display = 'flex';
+    });
+  });
+
+  // API call flow when clicking generate button
+  const generateBtn = document.getElementById('od_pay_btn');
+  const ticketOverlay = document.getElementById('ticketPopup');
+  const tpUsername = document.getElementById('tpUsername');
+  const tpPassword = document.getElementById('tpPassword');
+  const tpClose = document.getElementById('tpClose');
+  const copyUser = document.getElementById('copyUser');
+  const copyPass = document.getElementById('copyPass');
+
+  function showTicketPopup(username, password){
+    if(tpUsername) tpUsername.textContent = 'Nom d\'utilisateur: ' + username;
+    if(tpPassword) tpPassword.textContent = 'Mot de passe: ' + password;
+    if(ticketOverlay) ticketOverlay.classList.add('show');
+  }
+  function hideTicketPopup(){ if(ticketOverlay) ticketOverlay.classList.remove('show'); }
+
+  if(generateBtn){
+    generateBtn.addEventListener('click', function(){
+      if(!currentIdForfait){
+        alert('Aucun forfait sélectionné. Cliquez sur une offre pour générer un ticket.');
+        return;
+      }
+
+      // show loading state
+      generateBtn.disabled = true;
+      const origText = generateBtn.textContent;
+      generateBtn.textContent = 'Génération…';
+
+      // New API: POST /api/wifi/generate-ticket/ expects JSON { idForfait, idUser }
+      const apiUrl = 'http://185.213.27.226:7071/api/wifi/generate-ticket/';
+
+      // derive current user id from localStorage.authUser robustly
+      let idUser = null;
+      try{
+        const raw = localStorage.getItem('authUser');
+        const uobj = raw ? JSON.parse(raw) : null;
+        if(uobj && typeof uobj === 'object'){
+          const idKeys = ['id','_id','idUser','userId','user_id','user_id'];
+          for(const k of idKeys) if(uobj[k]){ idUser = uobj[k]; break; }
+        }
+      }catch(e){ /* ignore */ }
+
+      const payload = { idForfait: currentIdForfait, idUser: idUser == null ? null : idUser };
+
+      const headers = { 'Content-Type': 'application/json' };
+      try{ const tk = localStorage.getItem('authToken'); if(tk) headers['Authorization'] = 'Bearer ' + tk; }catch(e){}
+
+      fetch(apiUrl, { method: 'POST', headers: headers, body: JSON.stringify(payload) })
+        .then(resp => {
+          if(!resp.ok) throw new Error('Server error ' + resp.status);
+          return resp.json();
+        })
+        .then(data => {
+          // expected { username, password } or { usernameWifi, passwordWifi }
+          const user = data.username || data.user || data.usernameWifi || '';
+          const pass = data.password || data.pass || data.passwordWifi || '';
+          showTicketPopup(user, pass);
+        })
+        .catch(err => {
+          console.error('Ticket generation error', err);
+          alert('Erreur lors de la génération du ticket. Réessayez plus tard.');
+        })
+        .finally(() => {
+          generateBtn.disabled = false;
+          generateBtn.textContent = origText;
+        });
+    });
+  }
+
+  // copy handlers
+  if(copyUser) copyUser.addEventListener('click', function(){
+    navigator.clipboard.writeText(tpUsername.textContent.replace('Nom d\'utilisateur: ','')).then(()=>{
+      copyUser.textContent = 'Copié!'; setTimeout(()=>copyUser.textContent='Copier',1200);
+    });
+  });
+  if(copyPass) copyPass.addEventListener('click', function(){
+    navigator.clipboard.writeText(tpPassword.textContent.replace('Mot de passe: ','')).then(()=>{
+      copyPass.textContent = 'Copié!'; setTimeout(()=>copyPass.textContent='Copier',1200);
+    });
+  });
+
+  if(tpClose) tpClose.addEventListener('click', hideTicketPopup);
+  if(ticketOverlay) ticketOverlay.addEventListener('click', function(e){ if(e.target === ticketOverlay) hideTicketPopup(); });
+
+  // close offer modal close button if exists
+  try{
+    const closeBtn = document.querySelector('.close-offer-details');
+    if(closeBtn) closeBtn.addEventListener('click', function(){
+      const modal = document.getElementById('offerDetailsModal'); if(modal) modal.style.display='none';
+    });
+  }catch(e){ }
+
+})();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    const raw = localStorage.getItem('roles');
+    if(!raw) return;
+    let roles = null;
+    try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
+    let hasPart = false;
+    if (Array.isArray(roles)) {
+      hasPart = roles.includes('particulier') || roles.includes('PARTICULIER');
+    } else if (typeof roles === 'string') {
+      hasPart = roles.toLowerCase().indexOf('particulier') !== -1;
+    }
+    if (hasPart) {
+      const stats = document.getElementById('dashboardStats');
+      const content = document.getElementById('dashboardContent');
+      if (stats) stats.style.display = 'none';
+      if (content) content.style.display = 'none';
+
+      // hide sidebar links except notifications and change password
+      try{
+        const nav = document.querySelector('.sidebar-nav');
+        if(nav){
+          const anchors = Array.from(nav.querySelectorAll('a'));
+          anchors.forEach(a=>{
+            const keep = a.getAttribute('href') === 'notifications.html' || a.getAttribute('href') === 'changepassword.html' || a.getAttribute('href') === 'index.html';
+            a.style.display = keep ? 'block' : 'none';
+          });
+        }
+      }catch(e){}
+
+      // Insert a styled restricted-access card with links to Notifications and Change Password
+      const main = document.querySelector('main');
+      if (main) {
+        const card = document.createElement('div');
+        card.className = 'restricted-card';
+        card.innerHTML = '\n          <div class="restricted-inner">\n            <div class="restricted-icon">🔒</div>\n            <div class="restricted-body">\n              <h2>Accès restreint</h2>\n              <p>Votre compte est de type <strong>Particulier</strong>. Seuls les éléments suivants sont disponibles :</p>\n              <ul>\n                <li><a href="notifications.html">Notifications</a></li>\n                <li><a href="changepassword.html">Changer le mot de passe</a></li>\n              </ul>\n            </div>\n          </div>\n        ';
+
+        // add minimal styles for the card if not present
+        try{
+          if(!document.getElementById('restricted-card-style')){
+            const s = document.createElement('style'); s.id = 'restricted-card-style';
+            s.textContent = '\n              .restricted-card{background:#fff;border-radius:12px;padding:18px;margin:18px 0;box-shadow:0 8px 24px rgba(0,0,0,0.08);max-width:740px;}\n              .restricted-inner{display:flex;gap:14px;align-items:center;}\n              .restricted-icon{font-size:40px;background:linear-gradient(135deg,#eef2ff,#f0f9ff);width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;}\n              .restricted-body h2{margin:0 0 6px 0;font-size:18px;}\n              .restricted-body p{margin:0 0 8px 0;color:#444;}\n              .restricted-body ul{margin:0;padding-left:18px;color:#222;}\n              .restricted-body a{color:#0b62ff;text-decoration:none;}\n            ';
+            document.head.appendChild(s);
+          }
+        }catch(e){}
+
+        main.insertBefore(card, main.firstChild);
+      }
+    }
+  } catch(e) { /* ignore */ }
+});
+</script>
+
+</html>

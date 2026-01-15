@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>WIFIZONE — Vanilla</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WIFIZONE - Internet haut débit par satellite">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (icons) -->
+  <link rel="stylesheet" href="fontawesome/all.min.css">
+        <link rel="stylesheet" href="bootstrap-icons/bootstrap-icons.css">
+        
+
+  <!-- Vanilla Stylesheet -->
+  <link rel="stylesheet" href="css/vanilla.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link href="css/navbartest.css" rel="stylesheet">
+</head>
+<body>
+
+
+  <!-- Signup Modal -->
+<div id="signupModal" class="modal-overlay">
+  <div class="signup-modal">
+
+    <!-- Close button -->
+    <button class="modal-close" onclick="closeSignup()">×</button>
+
+    <!-- Header -->
+    <div class="signup-header">
+      <h2>Créer un compte</h2>
+      <p>Devenez rapidement Partenaire</p>
+    </div>
+
+    <!-- Form -->
+    <form id="signupForm" class="signup-form" novalidate>
+
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input id="nom" name="nom" type="text" placeholder="Ex: Jean Dupont" required>
+      </div>
+
+      <div class="form-group">
+        <label for="numeroWhatsapp">Numéro de téléphone</label>
+        <input id="numeroWhatsapp" name="numeroWhatsapp" type="tel" placeholder="Ex: 6XXXXXXXX" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" required>
+      </div>
+
+      <div id="signupMessage" style="margin-bottom:8px; color:#b00; font-size:0.95rem; display:none;"></div>
+
+      <button id="signupSubmit" type="submit" class="signup-btn">
+        Créer mon compte
+      </button>
+
+      <div style="margin-top:10px;text-align:center;">
+        <small>Vous avez un compte? <a href="#" onclick="closeSignup(); openSignin(); return false;" style="color: blue;">Se connecter</a></small>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<!-- Signin Modal -->
+<div id="signinModal" class="modal-overlay" style="display:none;">
+  <div class="signup-modal">
+
+    <!-- Close button -->
+    <button class="modal-close" onclick="closeSignin()">×</button>
+
+    <!-- Header -->
+    <div class="signup-header">
+      <h2>Se connecter</h2>
+      <p>Accédez à votre compte</p>
+    </div>
+
+    <!-- Form -->
+    <form id="signinForm" class="signup-form" novalidate>
+
+      <div class="form-group">
+        <label for="signinNumeroWhatsapp">Numéro de Téléphone</label>
+        <input id="signinNumeroWhatsapp" name="numeroWhatsapp" type="text" placeholder="Ex: 6XXXXXXXX" required>
+      </div>
+
+      <div class="form-group">
+        <label for="signinPassword">Mot de passe</label>
+        <input id="signinPassword" name="password" type="password" placeholder="••••••••" required>
+      </div>
+
+      <div id="signinMessage" style="margin-bottom:8px; color:#b00; font-size:0.95rem; display:none;"></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+        <a href="#" class="small" style="color: blue;">Mot de passe oublié?</a>
+        <button type="submit" class="signup-btn">connexion</button>
+      </div>
+
+      <div style="margin-top:10px;text-align:center;">
+        <small>Pas de compte? <a href="#" onclick="closeSignin(); openSignup(); return false;" style="color: blue;">Créer un compte</a></small>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="top-info">
+        <small><i class="fas fa-map-marker-alt"></i> 23 Ranking Street, New York</small>
+        <small><i class="fas fa-envelope"></i> Email@Example.com</small>
+      </div>
+      <div class="top-note">Note : We help you to Grow your Business</div>
+      <div class="top-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+
+        <!-- LOGO -->
+        <div class="nav-left">
+            <img src="img/logo1.png" alt="logo" class="logo-img">
+            <h1 class="logo-text">Wifi<span>zone</span></h1>
+        </div>
+
+        <!-- NAV LINKS -->
+        <nav class="nav-links">
+            <a class="active" href="index.html">Accueil</a>
+            <a href="about.html">À propos de nous</a>
+
+            <div class="dropdown">
+                <button class="drop-btn">Catégorie <i class="arrow">▼</i></button>
+                <div class="dropdown-content">
+                    <a href="messi.html">Particulier</a>
+                    <a href="famille.html">Famille</a>
+                    <a href="entreprise.html">Entreprise</a>
+                </div>
+            </div>
+
+            <a href="contact.html">Contact</a>
+            <a href="status.html">Status</a>
+        </nav>
+
+        <!-- RIGHT INFO -->
+        <div class="nav-right">
+              <div class="phone-icon"><i class="fa fa-users"></i></div>
+              <div class="phone-text" id="authContainer">
+                <button onclick="openSignin()" class="btn btn-outline signin-btn">Sign in</button>
+                <button onclick="openSignup()" class="btn btn-primary" style="margin-left:10px;">
+                 Signup
+                </button>
+              </div>
+        </div>
+    </div>
+  </header>
+
+  <!-- Carousel -->
+  <section class="carousel" id="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-slide active">
+        <img src="img/acceuil.jpg" alt="Slide 1">
+        <div class="carousel-caption">
+          <h6>La Connexion Sans Frontière</h6>
+          <h1>Connectez-vous au futur via le satellite</h1>
+          <p>Accédez à l'internet haut débit partout, même dans les zones les plus isolées</p>
+          <div class="carousel-btns">
+            <a href="#" class="btn btn-accent">Read More</a>
+            <a href="#contact" class="btn btn-outline">Contact Us</a>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="img/acceuil1.jpg" alt="Slide 2">
+        <div class="carousel-caption">
+          <h6>La Connexion Sans Frontière</h6>
+          <h1>Profitez d'un Internet rapide et stable partout</h1>
+          <p>Vous bénéficiez d'une connexion haut débit où que vous soyez, pour travailler, étudier, communiquer ou vous divertir sans interruption.</p>
+          <div class="carousel-btns">
+            <a href="#" class="btn btn-accent">Read More</a>
+            <a href="#contact" class="btn btn-outline">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="carousel-indicators" id="carouselIndicators"></div>
+  </section>
+
+  <!-- Facts -->
+  <section class="facts">
+    <div class="container facts-grid">
+      <div class="fact-item fade-in">
+        <div class="fact-icon"><i class="fa fa-users"></i></div>
+        <h5>+3500 utilisateurs actifs connectés chaque jour</h5>
+      </div>
+      <div class="fact-item fade-in">
+        <div class="fact-icon"><i class="fa fa-rocket"></i></div>
+        <h5>Connexion jusqu'à 100 Mbps</h5>
+      </div>
+      <div class="fact-item fade-in">
+        <div class="fact-icon"><i class="fa fa-comment-dots"></i></div>
+        <h5>Satisfaction client : 97 %</h5>
+      </div>
+      <div class="fact-item fade-in">
+        <div class="fact-icon"><i class="fa fa-briefcase"></i></div>
+        <h5>+200 entreprises déjà connectées avec WIFIZONE</h5>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="container about-grid">
+      <div class="about-images fade-in">
+        <img src="img/about1.jpg" alt="About 1" class="about-img-1">
+        <img src="img/about2.jpg" alt="About 2" class="about-img-2">
+      </div>
+      <div class="about-text fade-in">
+        <h5 class="section-subtitle">À propos de nous</h5>
+        <h1>WIFIZONE — La Connexion Sans Frontières</h1>
+        <p>WIFIZONE est une entreprise spécialisée dans la fourniture d'Internet haut débit par satellite. Notre mission est de connecter les particuliers, les familles et les entreprises partout au Cameroun, même dans les zones les plus éloignées. Grâce à une technologie moderne et performante, nous offrons une connexion rapide, stable et accessible, sans dépendre des réseaux terrestres.</p>
+        <p>Nous croyons que l'accès à Internet est essentiel pour le développement, la communication et l'éducation. C'est pourquoi WIFIZONE s'engage à offrir des solutions adaptées à chaque besoin : navigation personnelle, usage familial ou activité professionnelle. Avec une équipe expérimentée et un service client réactif, nous faisons de la connectivité une réalité pour tous.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services (Categories) -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h4 class="section-subtitle">Nos Catégories</h4>
+        <h1>Offrant à chacun une connexion Internet rapide, fiable et adaptée à ses besoins</h1>
+      </div>
+      <div class="services-grid">
+        <div class="service-card fade-in">
+          <div class="service-img"><img src="img/particulier.jpg" alt="Particulier"></div>
+          <div class="service-content">
+            <h4><i class="fas fa-user"></i> CATEGORIE PARTICULIER</h4>
+            <p>Profitez d'une connexion Internet fiable et rapide pour vos besoins personnels, que ce soit pour naviguer, regarder des vidéos ou rester en contact avec vos proches.</p>
+            <p class="small">Valeurs ajoutées : Installation simple et rapide, assistance technique 24h/24, couverture fiable même en zones reculées.</p>
+            <a href="login.html" class="btn btn-light">Read More</a>
+          </div>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-img"><img src="img/famille.jpg" alt="Famille"></div>
+          <div class="service-content">
+            <h4><i class="fas fa-users"></i> CATEGORIE FAMILLE</h4>
+            <p>Une solution pensée pour tous les membres du foyer, permettant à chacun de travailler, étudier ou se divertir en ligne sans interruption.</p>
+            <p class="small">Valeurs ajoutées : Connexion sécurisée pour tous les membres, streaming fluide et jeux en ligne sans lag.</p>
+            <a href="famille.html" class="btn btn-light">Read More</a>
+          </div>
+        </div>
+        <div class="service-card fade-in">
+          <div class="service-img"><img src="img/entreprise.jpg" alt="Entreprise"></div>
+          <div class="service-content">
+            <h4><i class="fas fa-building"></i> CATEGORIE ENTREPRISE</h4>
+            <p>Des connexions stables et performantes pour soutenir les activités professionnelles, faciliter les communications et sécuriser l'accès aux données.</p>
+            <p class="small">Valeurs ajoutées : Solutions sur mesure pour les besoins de l'entreprise, connexion rapide et stable même lors de pics d'activité, support technique prioritaire et dédié.</p>
+            <a href="entreprise.html" class="btn btn-light">Read More</a>
+          </div>
+        </div>
+      </div>
+      <div class="services-cta fade-in">
+        <a href="#" class="btn btn-primary">Services More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature (Vision) -->
+  <section class="feature">
+    <div class="feature-inner">
+      <div class="feature-text fade-in">
+        <span class="pill">Où voulons-nous aller ?</span>
+        <h1>🎯 Notre vision</h1>
+        <p>Offrir un Internet rapide, fiable et accessible à tous, partout au Cameroun, et devenir le réseau de référence en connectivité par satellite, en garantissant 👉</p>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-bolt"></i></div>
+            <div><small>Performance</small><strong>Connexion rapide et stable</strong></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-lock"></i></div>
+            <div><small>Sécurité</small><strong>Protection des données</strong></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-headset"></i></div>
+            <div><small>Assistance</small><strong>Disponible 24h/24</strong></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-globe"></i></div>
+            <div><small>Couverture</small><strong>Accessible partout</strong></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fa fa-lightbulb"></i></div>
+            <div><small>Innovation</small><strong>Solutions modernes et évolutives</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-img fade-in">
+        <img src="img/vision.jpg" alt="Vision">
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h5 class="section-subtitle">Témoignages</h5>
+        <h1>Ce que disent nos clients!</h1>
+      </div>
+      <div class="testimonial-carousel" id="testimonialCarousel">
+        <div class="testimonial-track">
+          <div class="testimonial-item">
+            <div class="testimonial-head">
+              <img src="img/testimonial-1.jpg" alt="Client">
+              <div>
+                <h4>Client Name</h4>
+                <p>Profession</p>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+              </div>
+            </div>
+            <p>Depuis que j'ai installé WIFIZONE chez moi, ma connexion Internet est ultra-rapide et stable. Je peux suivre mes cours en ligne sans interruption, regarder mes séries et films préférés en streaming sans coupure et même jouer à des jeux en ligne avec une latence minimale.</p>
+          </div>
+          <div class="testimonial-item">
+            <div class="testimonial-head">
+              <img src="img/testimonial-2.jpg" alt="Client">
+              <div>
+                <h4>Client Name</h4>
+                <p>Profession</p>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+              </div>
+            </div>
+            <p>Avec WIFIZONE, toute ma famille peut être connectée en même temps. Les enfants font leurs devoirs en ligne, nous regardons des films et faisons nos visioconférences professionnelles sans aucun problème de ralentissement.</p>
+          </div>
+          <div class="testimonial-item">
+            <div class="testimonial-head">
+              <img src="img/testimonial-3.jpg" alt="Client">
+              <div>
+                <h4>Client Name</h4>
+                <p>Profession</p>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+              </div>
+            </div>
+            <p>Pour mon entreprise, la connexion Internet est vitale. WIFIZONE nous a permis de rester productifs même lors de pics d'activité intense. La rapidité et la fiabilité du réseau sont excellentes.</p>
+          </div>
+          <div class="testimonial-item">
+            <div class="testimonial-head">
+              <img src="img/testimonial-4.jpg" alt="Client">
+              <div>
+                <h4>Client Name</h4>
+                <p>Profession</p>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+              </div>
+            </div>
+            <p>Vivant dans une zone rurale, j'avais beaucoup de mal à trouver une connexion stable. Depuis que j'ai souscrit à WIFIZONE, je bénéficie enfin d'un Internet fiable et rapide.</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-dots" id="testimonialDots"></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="container faq-grid">
+      <div class="faq-content fade-in">
+        <h4 class="section-subtitle">FAQs</h4>
+        <h1>Réponses aux Questions Courantes</h1>
+        <div class="accordion" id="accordion">
+          <div class="accordion-item open">
+            <button class="accordion-header">Comment souscrire à un forfait WIFIZONE ?</button>
+            <div class="accordion-body">
+              <p>Vous pouvez souscrire directement sur notre site web, par téléphone ou en visitant l'une de nos agences. Nos conseillers vous aideront à choisir le forfait le plus adapté à vos besoins.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Quelle est la vitesse de connexion proposée ?</button>
+            <div class="accordion-body">
+              <p>Nos forfaits offrent des vitesses adaptées à tous les usages : navigation, streaming, visioconférence ou jeux en ligne. La vitesse exacte dépend du plan choisi.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">L'installation est-elle compliquée ?</button>
+            <div class="accordion-body">
+              <p>Notre équipe technique se déplace à votre domicile ou sur votre site professionnel pour installer le matériel nécessaire et configurer votre connexion. L'installation est simple, rapide et sécurisée.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Puis-je connecter plusieurs appareils en même temps ?</button>
+            <div class="accordion-body">
+              <p>Nos forfaits permettent de connecter simultanément plusieurs appareils : smartphones, tablettes, ordinateurs ou smart TV, sans compromettre la vitesse de connexion.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Que faire en cas de problème ou panne de connexion ?</button>
+            <div class="accordion-body">
+              <p>Notre service client est disponible à tout moment. Vous pouvez nous contacter par téléphone, email ou chat pour une assistance rapide et efficace.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Est-ce que WIFIZONE est sécurisé pour mes données personnelles ?</button>
+            <div class="accordion-body">
+              <p>Toutes les connexions WIFIZONE sont protégées par des protocoles sécurisés. Vos données personnelles et professionnelles sont cryptées et protégées.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="faq-img fade-in">
+        <img src="img/faq.jpg" alt="FAQ">
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h5 class="section-subtitle">Get In Touch</h5>
+        <h1>Contact for any query</h1>
+        <p>Nous sommes là pour vous aider. N'hésitez pas à nous contacter.</p>
+      </div>
+      <div class="contact-cards">
+        <div class="contact-card fade-in">
+          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div>
+            <h4>Address</h4>
+            <a href="#">23 rank Str, NY</a>
+          </div>
+        </div>
+        <div class="contact-card fade-in">
+          <div class="contact-icon"><i class="fa fa-phone"></i></div>
+          <div>
+            <h4>Call Us</h4>
+            <a href="tel:+0123456789">+012 3456 7890</a>
+          </div>
+        </div>
+        <div class="contact-card fade-in">
+          <div class="contact-icon"><i class="fa fa-envelope"></i></div>
+          <div>
+            <h4>Email Us</h4>
+            <a href="mailto:info@example.com">info@example.com</a>
+          </div>
+        </div>
+      </div>
+      <div class="contact-main">
+        <div class="contact-map fade-in">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.4710403339755!2d-73.82241512404069!3d40.685622471397615!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c26749046ee14f%3A0xea672968476d962c!2s123rd%20St%2C%20Queens%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1686493221834!5m2!1sen!2sbd" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <form class="contact-form fade-in">
+          <input type="text" placeholder="Your Name" required>
+          <input type="email" placeholder="Your Email" required>
+          <input type="text" placeholder="Project">
+          <textarea rows="5" placeholder="Message"></textarea>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+
+        <!-- Left: Logo + Text + Social -->
+        <div class="footer-section">
+            <h2 class="logo">High<span>Tech</span></h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta facere delectus qui placeat inventore consectetur repellendus optio debitis.</p>
+
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+
+        <!-- Short Link -->
+        <div class="footer-section">
+            <h3>Short Link</h3>
+            <ul>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Contact us</a></li>
+                <li><a href="#">Our Services</a></li>
+                <li><a href="#">Our Projects</a></li>
+                <li><a href="#">Latest Blog</a></li>
+            </ul>
+        </div>
+
+        <!-- Help Link -->
+        <div class="footer-section">
+            <h3>Help Link</h3>
+            <ul>
+                <li><a href="#">Terms Of use</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Helps</a></li>
+                <li><a href="#">FQAs</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact Us -->
+        <div class="footer-section">
+            <h3>Contact Us</h3>
+
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <a href="#"><p>123 Street, New York, USA</p></a>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <a href="tel:+1234567890">+123 456 7890</a>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <a href="mailto:info@example.com">info@example.com</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-bar">
+        <p>© Ecolab - WiFi zone, All right reserved.</p>
+        <p>Designed By <span>Junkey06</span></p>
+    </div>
+</footer>
+
+  <!-- Back to Top -->
+  <!-- Floating WhatsApp Link (always visible) -->
+<div class="whatsapp-fab">
+
+  <!-- Expanded items -->
+  <a href="https://wa.me/237XXXXXXXXX"
+     target="_blank"
+     class="wa-item wa-client">
+    <span class="wa-label">Service client</span>
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <a href="https://chat.whatsapp.com/L89n2YsITBqH1XWeL5qIGG"
+     target="_blank"
+     class="wa-item wa-group">
+    <span class="wa-label">Groupe WhatsApp</span>
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- Main toggle button -->
+  <button class="wa-toggle" id="waToggle">
+    <i class="fab fa-whatsapp"></i>
+  </button>
+
+</div>
+
+<script>
+  document.getElementById('waToggle').addEventListener('click', function () {
+    document.querySelector('.whatsapp-fab').classList.toggle('open');
+  });
+</script>
+
+<script>
+function openSignup() {
+  document.getElementById('signupModal').style.display = 'flex';
+}
+
+function closeSignup() {
+  document.getElementById('signupModal').style.display = 'none';
+}
+
+function openSignin() {
+  document.getElementById('signinModal').style.display = 'flex';
+}
+
+function closeSignin() {
+  document.getElementById('signinModal').style.display = 'none';
+}
+</script>
+
+
+  <!-- Vanilla JS -->
+  <script src="js/vanilla.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/signup.js"></script>
+  <script src="js/signin.js"></script>
+</body>
+</html>

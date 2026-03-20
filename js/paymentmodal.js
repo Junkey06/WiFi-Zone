@@ -79,10 +79,59 @@ paymentForm.onsubmit = async function(e) {
     return;
   }
 
-  const payload = { numero, montant, categorie, idForfait };
+  // determine signed-in user id (if any)
+  let idUser = null;
+  try {
+    if (window.getAuth && typeof window.getAuth === 'function'){
+      const a = window.getAuth(); if (a && a.user) {
+        const u = a.user;
+        idUser = u.id || u._id || u.idUser || u.userId || u.numeroWhatsapp || u.numero || u.phone || null;
+      }
+    }
+  } catch(e){}
+  try{
+    if(!idUser){
+      const raw = localStorage.getItem('authUser');
+      if(raw){ const u = JSON.parse(raw); idUser = u.id || u._id || u.idUser || u.userId || u.numeroWhatsapp || u.numero || u.phone || null; }
+    }
+  }catch(e){}
+
+  // if user is not signed in (no usable id), block purchase and show signup/signin
+  if (!idUser) {
+    try {
+      var pm = document.getElementById('paymentModal');
+      if (pm) { pm.style.display = 'none'; }
+      document.body.style.overflow = '';
+    } catch(e){}
+
+    // show guidance message on the signup modal if available
+    try {
+      var sMsg = document.getElementById('signupMessage');
+      if (sMsg) {
+        sMsg.textContent = "Créez d'abord votre compte pour recevoir vos identifiants WiFi. Si vous avez déjà un compte, veuillez vous connecter avant d'effectuer un achat.";
+        sMsg.style.display = 'block';
+        sMsg.style.color = '#b00';
+      }
+    } catch(e){}
+
+    // open signup (preferred) or signin modal; fallback to login page
+    try {
+      if (typeof openSignup === 'function') {
+        openSignup();
+      } else if (typeof openSignin === 'function') {
+        openSignin();
+      } else {
+        window.location.href = 'login.html';
+      }
+    } catch(e){}
+
+    return;
+  }
+
+  const payload = { numero, montant, categorie, idForfait, idUser };
 
   // API URL
-  const apiUrl = 'http://185.213.27.226:7071/api/wifi/payment';
+  const apiUrl = 'http://10.0.10.8:7071/api/wifi/payment';
 
   submitBtn.disabled = true;
   const oldText = submitBtn.textContent;

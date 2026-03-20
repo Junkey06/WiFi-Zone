@@ -111,56 +111,7 @@
 
         </style>
 
-        <!-- Inline MikroTik responsive fixes: prevent keyboard overflow on mobile -->
-        <style>
-        /* Container sizing and scrolling to avoid form deformation when virtual keyboard appears */
-        #inline-login { padding: 8px 12px; }
-        #inline-login .login-inline-box {
-          box-sizing: border-box;
-          width: 100%;
-          max-width: 560px;
-          margin: 0 auto;
-          padding: 14px;
-          border-radius: 12px;
-          background: #fff;
-          -webkit-overflow-scrolling: touch;
-          /* allow the box to expand and let the page scroll instead of creating an inner scrollbar */
-          max-height: none;
-          overflow: visible;
-          padding-bottom: env(safe-area-inset-bottom, 12px);
-        }
-        #inline-login .login-inline-box form { display:flex; flex-direction:column; gap:10px; }
-        #inline-login input, #inline-login .login-inline-box button, #inline-login textarea { font-size:16px; min-height:44px; }
-        /* Ensure inputs don't trigger iOS text zoom by enforcing 16px font-size */
-        @media (max-width: 700px) {
-          #inline-login { padding: 6px; }
-          #inline-login .login-inline-box { width: calc(100% - 12px); max-height: calc(100vh - 96px); }
-        }
-        /* Avoid body overflow when focusing inputs on some Android browsers */
-        html, body { -webkit-text-size-adjust: 100%; }
-        </style>
 
-        <style>
-        /* Ensure submit stays inside the form and fills the available width */
-        #inline-login .login-inline-box form { position: relative; z-index: 1; }
-        #inline-login .login-inline-box form input[type="submit"],
-        #inline-login .login-inline-box form button {
-          display: block;
-          width: 100%;
-          box-sizing: border-box;
-          margin: 8px 0 16px;
-          position: relative;
-          z-index: 2;
-        }
-        /* defensive: remove negative margins that could push the button out */
-        #inline-login .login-inline-box input, #inline-login .login-inline-box label { margin: 0; }
-        </style>
-        <style>
-        /* Desktop: extra bottom padding so submit doesn't touch container edge */
-        @media (min-width: 992px) {
-          #inline-login .login-inline-box { padding-bottom: 28px; }
-        }
-        </style>
 
     </head>
 
@@ -986,39 +937,7 @@ $(endif)
   }
 </script>
 
-  <!-- Inline login focus helpers: keep inputs visible when virtual keyboard opens -->
-  <script>
-  (function(){
-    var inlineSection = document.getElementById('inline-login');
-    if(!inlineSection) return;
-    var inputs = inlineSection.querySelectorAll('input, textarea, select');
-    function ensureVisible(el){
-      try{ el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }); }catch(e){}
-    }
-    inputs.forEach(function(inp){
-      inp.addEventListener('focus', function(){
-        // small delay so the virtual keyboard can open first
-        setTimeout(function(){ ensureVisible(inp); }, 220);
-      });
-    });
-
-    // Use VisualViewport when available to detect keyboard size changes and adjust
-    if(window.visualViewport){
-      var lastVH = window.visualViewport.height;
-      window.visualViewport.addEventListener('resize', function(){
-        var vh = window.visualViewport.height;
-        // if height reduced, keyboard likely opened
-        if(vh < lastVH){
-          var active = document.activeElement;
-          if(active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')){
-            setTimeout(function(){ try{ active.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){} }, 50);
-          }
-        }
-        lastVH = vh;
-      });
-    }
-  })();
-  </script>
+  
 
 <!-- ========== WHATSAPP TIMED POPUP ========== -->
 <style>
@@ -1201,7 +1120,7 @@ $(endif)
 (function(){
   const BTN_SEL = '.njoh-btn';
   const STORAGE_KEY = 'njoh_clicks';
-  const API_URL = 'http://185.213.27.226:7071/api/wifi/free-ticket/';
+  const API_URL = 'http://10.0.10.8:7071/api/wifi/free-ticket/';
 
   const btn = document.querySelector(BTN_SEL);
   if(!btn) return;

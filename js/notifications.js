@@ -2,7 +2,7 @@
 (function(){
   'use strict';
 
-  const API_BASE = 'http://185.213.27.226:7071/api/wifi/notifications';
+  const API_BASE = 'http://10.0.10.8:7071/api/wifi/notifications';
   // runtime state for current user and read set
   let __currentUserId = null;
   let __currentReadSet = new Set();

@@ -7,7 +7,7 @@
   const submitBtn = document.getElementById('signupSubmit');
   const signupModal = document.getElementById('signupModal');
   const signupInner = signupModal ? signupModal.querySelector('.signup-modal') : null;
-  const API_URL = 'http://185.213.27.226:7071/api/wifi/create-user';
+  const API_URL = 'http://10.0.10.8:7071/api/wifi/create-user';
 
   function createSuccessOverlay(text){
     const overlay = document.createElement('div');
@@ -170,7 +170,7 @@
           } else {
             // attempt to login with same credentials
             try{
-              const loginRes = await fetch('http://185.213.27.226:7071/api/wifi/login-user', {
+              const loginRes = await fetch('http://10.0.10.8:7071/api/wifi/login-user', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ numeroWhatsapp, password, type: typeVal })
               });

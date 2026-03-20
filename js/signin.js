@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     try {
-      const res = await fetch('http://185.213.27.226:7071/api/wifi/login-user', {
+      const res = await fetch('http://10.0.10.8:7071/api/wifi/login-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ numeroWhatsapp: numero.trim(), password: password })
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // try to fetch profile to obtain roles when not present in login response
             (async function(){
               try {
-                const pRes = await fetch('http://185.213.27.226:7071/api/wifi/profile', {
+                const pRes = await fetch('http://10.0.10.8:7071/api/wifi/profile', {
                   method: 'GET',
                   headers: { 'Authorization': 'Bearer ' + (data.token || ''), 'Accept': 'application/json' }
                 });

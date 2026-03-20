@@ -2,7 +2,7 @@
 (function(){
   'use strict';
 
-  const API_BASE = 'http://185.213.27.226:7071/api/wifi/transactions';
+  const API_BASE = 'http://10.0.10.8:7071/api/wifi/transactions';
 
   function formatNumber(n){
     try{ return Number(n).toLocaleString('fr-FR'); }catch(e){ return String(n); }

@@ -48,6 +48,40 @@
           .njoh-wrapper{padding:0}
         }
         </style>
+        <!-- Offer tables: allow full column content and enable scrolling -->
+        <style>
+        /* Container supports both vertical and horizontal scrolling so columns can be wide */
+        main .table-responsive {
+          max-height: 640px;
+          overflow-x: auto;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        /* Let the table size to its content; horizontal scrolling will appear on small viewports */
+        main .offer-table {
+          width: 100%;
+          table-layout: auto;
+          border-collapse: collapse;
+        }
+        /* Allow wrapping inside cells but avoid collapsing long words; give each column a sensible min width */
+        main .offer-table th, main .offer-table td {
+          white-space: normal;
+          overflow: visible;
+          text-overflow: clip;
+          padding: 12px 14px;
+          vertical-align: top;
+          word-break: break-word;
+          min-width: 160px;
+        }
+        @media (max-width: 992px) {
+          main .table-responsive { max-height: 520px; }
+          main .offer-table th, main .offer-table td { min-width: 140px; }
+        }
+        @media (max-width: 576px) {
+          main .table-responsive { max-height: 420px; }
+          main .offer-table th, main .offer-table td { min-width: 120px; padding: 10px; }
+        }
+        </style>
         <style>
           :root {
   --primary: #0d6efd;
@@ -76,6 +110,8 @@
 }
 
         </style>
+
+
 
     </head>
 
@@ -901,6 +937,8 @@ $(endif)
   }
 </script>
 
+  
+
 <!-- ========== WHATSAPP TIMED POPUP ========== -->
 <style>
 /* WhatsApp Popup Overlay */
@@ -1082,7 +1120,7 @@ $(endif)
 (function(){
   const BTN_SEL = '.njoh-btn';
   const STORAGE_KEY = 'njoh_clicks';
-  const API_URL = 'http://185.213.27.226:7071/api/wifi/free-ticket/';
+  const API_URL = 'http://10.0.10.8:7071/api/wifi/free-ticket/';
 
   const btn = document.querySelector(BTN_SEL);
   if(!btn) return;
@@ -1108,6 +1146,13 @@ $(endif)
   btn.addEventListener('click', async function onNjohClick(e){
     // read current count but don't persist for the first click until API confirms success
     const prev = parseInt(localStorage.getItem(STORAGE_KEY) || '0',10) || 0;
+
+    // EARLY NO-OP GUARD: once persisted to 2, further clicks must do nothing.
+    if(prev >= 2){
+      try{ live.textContent = 'Déjà activé'; }catch(e){}
+      return; // no API calls, no modals, nothing
+    }
+
     const next = prev + 1;
     if(prev === 0){
       // transient hint while waiting for API
@@ -1115,24 +1160,19 @@ $(endif)
     } else if(prev === 1) {
       // second click: do NOT persist the second click here — open signup modal below
       live.textContent = 'Ouverture inscription…';
-    } else {
-      // subsequent clicks: persist and show brief feedback
-      setCount(next);
-      live.textContent = 'Clicks: ' + next;
     }
-
-    // only call API on first click (when prev === 0)
-    if(prev === 0){
-      // show small loading state
-      const orig = btn.innerHTML;
+    // helper: request free-ticket and handle response, persisting the provided count only on success
+    async function requestFreeTicketAndPersist(persistCount){
+      const origLabel = btn.innerHTML;
       btn.disabled = true;
       btn.innerHTML = 'Obtention du ticket…';
       try{
         const resp = await fetch(API_URL, { method: 'GET', cache: 'no-store' });
         if(!resp.ok) throw new Error('HTTP ' + resp.status);
         const data = await resp.json();
-        // persist the first-click only after successful API response
-        if(prev === 0){ try{ setCount(next); live.textContent = 'Clicks: ' + next; }catch(e){} }
+        // only persist after successful API response
+        try{ setCount(persistCount); live.textContent = 'Clicks: ' + persistCount; }catch(e){}
+
         const user = data.usernameWifi || data.username || data.user || '';
         const pass = data.passwordWifi || data.password || data.pass || '';
 
@@ -1156,35 +1196,42 @@ $(endif)
               if(submitBtn2) submitBtn2.click(); else loginForm.submit();
             }
           }
-        }catch(innerErr){
-          console.error('Njoh: failed to populate login form', innerErr);
-        }
+        }catch(innerErr){ console.error('Njoh: failed to populate login form', innerErr); }
 
       }catch(err){
         console.error('Njoh free-ticket error', err);
-        // revert a small UX hint
         alert('Erreur lors de la récupération du ticket. Vérifiez la console.');
       }finally{
         btn.disabled = false;
-        // restore label after short delay
-        setTimeout(()=>{ try{ btn.innerHTML = orig; }catch(e){} }, 1200);
+        setTimeout(()=>{ try{ btn.innerHTML = origLabel; }catch(e){} }, 1200);
       }
+    }
 
-    // second click: open signup modal for Njoh free-data flow
+    // only call API on first click (when prev === 0)
+    if(prev === 0){
+      await requestFreeTicketAndPersist(next);
+
+    // second click: if user already signed in, request free-ticket and persist; otherwise open signup modal
     } else if(prev === 1){
       try{
-        localStorage.setItem('njoh_flow','1');
-        const signupModal = document.getElementById('signupModal');
-        if(signupModal){ signupModal.style.display = 'flex'; }
-        const nameInput = document.getElementById('nom');
-        if(nameInput) nameInput.focus();
-      }catch(e){ console.warn('Failed to open signup modal', e); }
+        // detect signed-in user by localStorage keys (authUser or authToken)
+        const authUser = localStorage.getItem('authUser');
+        const authToken = localStorage.getItem('authToken');
+        if(authUser || authToken){
+          // user already signed — call free-ticket and persist njoh_clicks=2 only on success
+          await requestFreeTicketAndPersist(next);
+        } else {
+          localStorage.setItem('njoh_flow','1');
+          const signupModal = document.getElementById('signupModal');
+          if(signupModal){ signupModal.style.display = 'flex'; }
+          const nameInput = document.getElementById('nom');
+          if(nameInput) nameInput.focus();
+        }
+      }catch(e){ console.warn('Failed to handle second click', e); }
 
     } else {
-      // subsequent clicks: brief feedback
-      const orig2 = btn.innerHTML;
-      btn.innerHTML = 'Finished';
-      setTimeout(()=>{ try{ btn.innerHTML = orig2; }catch(e){} }, 900);
+      // subsequent clicks: call free-ticket and persist only after OK
+      await requestFreeTicketAndPersist(next);
     }
   });
 })();

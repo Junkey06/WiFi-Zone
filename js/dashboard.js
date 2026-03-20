@@ -2,7 +2,7 @@
 (function(){
   'use strict';
 
-  const API_BASE = 'http://185.213.27.226:7071/api/wifi/dashboard{idUser}'.replace('{idUser}', '');
+  const API_BASE = 'http://10.0.10.8:7071/api/wifi/dashboard{idUser}'.replace('{idUser}', '');
 
   function formatAmount(n){
     if (n === null || n === undefined) return '0';
@@ -28,9 +28,24 @@
         return;
       }
       const data = await res.json();
-      if(soldeEl) soldeEl.textContent = formatAmount(data.soldeTotal);
-      if(venteEl) venteEl.textContent = formatAmount(data.venteTotal) + ' Fcfa';
-      if(gainEl) gainEl.textContent = formatAmount(data.gainTotal) + ' Fcfa';
+
+      if (soldeEl) {
+        const v = data.soldeTotal;
+        if (typeof v === 'string') soldeEl.textContent = v;
+        else soldeEl.textContent = formatAmount(v);
+      }
+
+      if (venteEl) {
+        const v = data.venteTotal;
+        if (typeof v === 'string') venteEl.textContent = v;
+        else venteEl.textContent = formatAmount(v) + ' Fcfa';
+      }
+
+      if (gainEl) {
+        const v = data.gainTotal;
+        if (typeof v === 'string') gainEl.textContent = v;
+        else gainEl.textContent = formatAmount(v) + ' Fcfa';
+      }
     }catch(err){
       console.error('Dashboard fetch error', err);
       if(soldeEl) soldeEl.textContent = 'N/A';

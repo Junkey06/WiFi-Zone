@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transaction History — Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Saira:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icon Font Stylesheet -->
+  <link rel="stylesheet" href="fontawesome/all.min.css">
+  <link rel="stylesheet" href="bootstrap-icons/bootstrap-icons.css">
+
+  <!-- Template Stylesheets -->
+  <link href="css/mini-bootstrap.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+  <link href="css/mobile.css" rel="stylesheet">
+  <link href="css/notifmodal.css" rel="stylesheet">
+
+  <!-- Dashboard specific overrides -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/topbar.css">
+</head>
+<body>
+
+    <div id="notifModal" class="notif-modal">
+  <div class="notif-modal-box">
+    <button class="notif-close">&times;</button>
+
+    <h3 id="modalTitle"></h3>
+    <span id="modalDate"></span>
+
+    <p id="modalMessage"></p>
+  </div>
+</div>
+
+
+    <div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">📊 Admin</span>
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
+      <a href="transactions.html"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
+      <a class="active" href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
+      <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
+      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Acceuille</span></a>
+    </nav>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="topbar">
+      <button id="mobileMenuToggle" class="mobile-menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <h1>Notifications</h1>
+      <div class="user" id="topbarUser">
+        <button><span>John Doe</span>
+        <i class="fa fa-user" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="pages-header">
+      <h2 style="margin-bottom: 20px;"><i class="bi bi-receipt-cutoff"></i> Historique des Notifications</h2>
+    </div>
+
+    <!-- Start of Notifications -->
+    <div class="notifications-wrapper">
+
+  <h2 class="notif-title">
+    20 Messages <span>(17 nouveaux)</span>
+  </h2>
+
+  <!-- Unread -->
+  <div class="notif-item unread"
+     data-title="ACTUDUCAMER"
+     data-date="17/12/2025 · 15:36"
+     data-message="Ne te laisse pas distraire, l'info SUR les opportunités actuelles peut changer ta situation aujourd'hui.">
+  <div class="notif-accent"></div>
+
+  <div class="notif-content">
+    <div class="notif-header">
+      <span class="notif-sender">ACTUDUCAMER</span>
+      <span class="notif-date">17/12/2025 · 15:36</span>
+    </div>
+    <div class="notif-message"></div>
+  </div>
+</div>
+
+  <!-- Unread -->
+  <div class="notif-item unread">
+    <div class="notif-accent"></div>
+
+    <div class="notif-content">
+      <div class="notif-header">
+        <span class="notif-sender">TonMillion</span>
+        <span class="notif-date">16/12/2025 · 10:37</span>
+      </div>
+      <p class="notif-message">
+        Chaque semaine, de nouveaux millions...
+      </p>
+    </div>
+  </div>
+
+  <!-- Read -->
+  <div class="notif-item read">
+    <div class="notif-content">
+      <div class="notif-header">
+        <span class="notif-sender">PhoneDeal</span>
+        <span class="notif-date">15/12/2025 · 13:44</span>
+      </div>
+      <p class="notif-message">
+        Bon plan à Orange Playce ! Tes sma...
+      </p>
+    </div>
+  </div>
+
+  <!-- Read -->
+  <div class="notif-item read">
+    <div class="notif-content">
+      <div class="notif-header">
+        <span class="notif-sender">TonMillion</span>
+        <span class="notif-date">13/12/2025 · 10:08</span>
+      </div>
+      <p class="notif-message">
+        Les forfaits les plus généreux du mo...
+      </p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+
+<script src="js/notifmodal.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/topbar.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    const raw = localStorage.getItem('roles');
+    if(!raw) return;
+    let roles = null; try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
+    let hasPart = false;
+    if (Array.isArray(roles)) hasPart = roles.includes('particulier') || roles.includes('PARTICULIER');
+    else if (typeof roles === 'string') hasPart = roles.toLowerCase().indexOf('particulier') !== -1;
+    if (hasPart) {
+      try{
+        const nav = document.querySelector('.sidebar-nav');
+        if(nav){
+          const anchors = Array.from(nav.querySelectorAll('a'));
+          anchors.forEach(a=>{
+            const href = a.getAttribute('href');
+            const keep = href === 'notifications.html' || href === 'changepassword.html' || href === 'index.html';
+            a.style.display = keep ? 'block' : 'none';
+          });
+        }
+      }catch(e){}
+    }
+  } catch(e) { /* ignore */ }
+});
+</script>
+
+</html>

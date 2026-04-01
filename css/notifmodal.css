@@ -1,0 +1,183 @@
+.notifications-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  max-width: 1000px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+/* Title */
+.notif-title {
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+.notif-title span {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Item */
+.notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: all 0.25s ease;
+}
+
+.notif-item:hover {
+  transform: translateY(-2px);
+  background: #f8fafc;
+}
+
+/* Accent for unread */
+.notif-accent {
+  width: 4px;
+  border-radius: 4px;
+  background: #2563eb;
+}
+
+/* Content */
+.notif-content {
+  flex: 1;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.notif-sender {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.notif-date {
+  font-size: 12px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.notif-message {
+  font-size: 14px;
+  margin-top: 4px;
+  color: #334155;
+}
+
+/* Unread */
+.notif-item.unread {
+  background: #f1f5ff;
+}
+
+.notif-item.unread .notif-message {
+  font-weight: 500;
+}
+
+/* Read */
+.notif-item.read {
+  background: transparent;
+}
+
+.notif-item.read .notif-sender {
+  font-weight: 600;
+  color: #475569;
+}
+
+.notif-item.read .notif-message {
+  color: #64748b;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .notif-date {
+    font-size: 11px;
+  }
+  .notif-message {
+    font-size: 13px;
+  }
+}
+
+
+
+/* ===== MODAL ===== */
+.notif-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.notif-modal.active {
+  display: flex;
+}
+
+.notif-modal-box {
+  background: #ffffff;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 16px;
+  padding: 20px;
+  animation: scaleIn 0.25s ease;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.notif-modal-box h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.notif-modal-box span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.notif-modal-box p {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Close */
+.notif-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* ===== MARK AS READ ANIMATION ===== */
+.notif-item {
+  cursor: pointer;
+}
+
+.notif-item.marking-read {
+  animation: markRead 0.4s ease forwards;
+}
+
+@keyframes markRead {
+  from {
+    background: #f1f5ff;
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.notif-item.read .notif-accent {
+  display: none;
+}

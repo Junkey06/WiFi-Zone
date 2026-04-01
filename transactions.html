@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transaction History — Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Saira:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icon Font Stylesheet -->
+  <link rel="stylesheet" href="fontawesome/all.min.css">
+  <link rel="stylesheet" href="bootstrap-icons/bootstrap-icons.css">
+
+  <!-- Template Stylesheets -->
+  <link href="css/mini-bootstrap.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+  <link href="css/mobile.css" rel="stylesheet">
+
+  <!-- Dashboard specific overrides -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- Transactions page specific styles -->
+
+
+  <style>
+    /* ========== TRANSACTION PAGE STYLES ========== */
+
+    .page-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .page-header h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+    }
+    .page-header h2 i { color: #6366f1; margin-right: 10px; }
+
+    /* Date Filter */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 16px 20px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+    .filter-bar label {
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+    .filter-bar input[type="date"] {
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: #fff;
+      color: #334155;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .filter-bar input[type="date"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    .filter-bar .filter-btn {
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .filter-bar .filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99,102,241,0.25);
+    }
+    .filter-bar .reset-btn {
+      padding: 10px 16px;
+      background: #e2e8f0;
+      color: #475569;
+      border: none;
+      border-radius: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .filter-bar .reset-btn:hover { background: #cbd5e1; }
+
+    /* Transaction Table Container */
+    .table-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(2,6,23,0.07);
+      position: relative;
+      overflow: visible;
+    }
+
+    /* Inner scroller: only this element scrolls horizontally */
+    .table-scroller {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+    }
+
+    /* Transaction Table */
+    .transaction-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .transaction-table thead {
+      background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+    }
+    .transaction-table thead th {
+      padding: 16px 18px;
+      text-align: left;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: none;
+    }
+    .transaction-table thead th:first-child { border-radius: 0; }
+    .transaction-table thead th:last-child { border-radius: 0; }
+
+    .transaction-table tbody tr {
+      transition: background 0.15s;
+    }
+    .transaction-table tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .transaction-table tbody tr:hover {
+      background: linear-gradient(90deg, rgba(99,102,241,0.06), rgba(6,182,212,0.04));
+    }
+    .transaction-table tbody td {
+      padding: 14px 18px;
+      color: #334155;
+      font-size: 0.92rem;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .status-badge.valid {
+      background: rgba(34,197,94,0.12);
+      color: #16a34a;
+    }
+    .status-badge.valid::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse-green 1.5s infinite;
+    }
+    .status-badge.expired {
+      background: rgba(239,68,68,0.12);
+      color: #dc2626;
+    }
+    .status-badge.expired::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Cost column */
+    .cost-cell {
+      font-weight: 700;
+      color: #059669;
+    }
+
+    /* Credential cells */
+    .credential {
+      font-family: 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #475569;
+      display: inline-block;
+    }
+    .credential.password {
+      position: relative;
+      cursor: pointer;
+    }
+    .credential.password .hidden-pass { letter-spacing: 2px; }
+    .credential.password:hover .hidden-pass { display: none; }
+    .credential.password:hover .real-pass { display: inline; }
+    .credential.password .real-pass { display: none; }
+
+    /* Data badge */
+    .data-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: linear-gradient(90deg, rgba(99,102,241,0.1), rgba(6,182,212,0.08));
+      border-radius: 8px;
+      font-weight: 600;
+      color: #4f46e5;
+      font-size: 0.85rem;
+    }
+    .data-badge i { color: #06b6d4; }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #64748b;
+    }
+    .empty-state i {
+      font-size: 3rem;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+    }
+    .empty-state h4 { color: #475569; margin-bottom: 8px; }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+    .pagination button {
+      width: 38px;
+      height: 38px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #475569;
+      transition: all 0.15s;
+    }
+    .pagination button:hover { background: #f1f5f9; border-color: #6366f1; color: #6366f1; }
+    .pagination button.active {
+      background: linear-gradient(90deg, #6366f1 0%, #06b6d4 100%);
+      color: #fff;
+      border-color: transparent;
+    }
+    .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Stats Summary */
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stat-card .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .stat-card .stat-icon.blue { background: rgba(59,130,246,0.12); color: #3b82f6; }
+    .stat-card .stat-icon.green { background: rgba(34,197,94,0.12); color: #22c55e; }
+    .stat-card .stat-icon.red { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .stat-card .stat-icon.purple { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+    .stat-card .stat-info h4 { font-size: 1.4rem; font-weight: 700; color: #1e293b; margin: 0; }
+    .stat-card .stat-info p { font-size: 0.85rem; color: #64748b; margin: 4px 0 0; }
+
+    /* ========== MOBILE RESPONSIVE ========== */
+    @media (max-width: 900px) {
+      .main {
+        padding: 16px;
+        overflow-x: hidden;
+      }
+
+      /* Ensure topbar sticks to viewport top on mobile (no visible gap) */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        margin: 0 -16px 12px -16px;
+        border-radius: 0 0 10px 10px;
+        background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(6px);
+      }
+
+      .topbar {
+        flex-wrap: nowrap;
+        gap: 10px;
+      }
+      .topbar h1 {
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .pages-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+      .pages-header h2 {
+        font-size: 1.3rem;
+      }
+
+      /* Stats - 2 columns on tablet */
+      .stats-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .stat-card {
+        padding: 14px;
+      }
+      .stat-card .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+      }
+      .stat-card .stat-info h4 {
+        font-size: 1.1rem;
+      }
+      .stat-card .stat-info p {
+        font-size: 0.75rem;
+      }
+
+      /* Filter bar stacked */
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .filter-bar .filter-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .filter-bar label {
+        min-width: 30px;
+        font-size: 0.85rem;
+      }
+      .filter-bar input[type="date"] {
+        flex: 1;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+      .filter-bar .filter-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .filter-bar .filter-btn,
+      .filter-bar .reset-btn {
+        flex: 1;
+        padding: 10px 14px;
+        font-size: 0.9rem;
+      }
+
+      /* Table - horizontal scroll */
+      .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+      }
+      .transaction-table {
+        min-width: 750px;
+        width: max-content;
+      }
+      .transaction-table thead th,
+      .transaction-table tbody td {
+        padding: 12px 14px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+
+      /* Pagination */
+      .pagination {
+        padding: 14px;
+        gap: 6px;
+      }
+      .pagination button {
+        width: 34px;
+        height: 34px;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .main {
+        padding: 12px;
+      }
+
+      .topbar h1 {
+        font-size: 1rem;
+      }
+      .user span {
+        display: none;
+      }
+
+      .page-header h2 {
+        font-size: 1.1rem;
+      }
+      .page-header h2 i {
+        margin-right: 6px;
+      }
+
+      /* Stats - single column on small mobile */
+      .stats-summary {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .stat-card {
+        padding: 12px 14px;
+      }
+      .stat-card .stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        border-radius: 10px;
+      }
+      .stat-card .stat-info h4 {
+        font-size: 1rem;
+      }
+
+      /* Filter bar compact */
+      .filter-bar {
+        padding: 12px;
+        border-radius: 10px;
+      }
+      .filter-bar label {
+        font-size: 0.8rem;
+      }
+      .filter-bar input[type="date"] {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+      }
+      .filter-bar .filter-btn,
+      .filter-bar .reset-btn {
+        padding: 9px 12px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+      }
+
+      /* Table container with scroll hint */
+      .table-container {
+        position: relative;
+        border-radius: 10px;
+      }
+      .table-container::after {
+        content: '← Scroll →';
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        transform: translateY(-50%);
+        background: rgba(99,102,241,0.9);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        pointer-events: none;
+        opacity: 0.9;
+        animation: fadeHint 3s forwards;
+        z-index: 10;
+      }
+      @keyframes fadeHint {
+        0%, 70% { opacity: 0.9; }
+        100% { opacity: 0; visibility: hidden; }
+      }
+
+      .transaction-table thead th,
+      .transaction-table tbody td {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+      }
+      .status-badge {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        gap: 4px;
+      }
+      .status-badge::before {
+        width: 6px;
+        height: 6px;
+      }
+      .credential {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+        border-radius: 4px;
+      }
+      .data-badge {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        gap: 4px;
+        border-radius: 6px;
+      }
+      .cost-cell {
+        font-size: 0.8rem;
+      }
+
+      /* Pagination compact */
+      .pagination {
+        padding: 12px;
+        gap: 5px;
+      }
+      .pagination button {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+      }
+    }
+  </style>
+  <style>
+    /* Mobile top-gap fix: ensure nothing creates a gap above the topbar (including safe-area) */
+    @media (max-width: 900px) {
+      html, body { height: 100%; }
+      body, .dashboard, .main { margin-top: 0 !important; padding-top: 0 !important; }
+      .topbar { position: sticky !important; top: 0 !important; z-index: 220; }
+      /* respect safe-area insets on iOS */
+      .topbar { padding-top: env(safe-area-inset-top); }
+      .sidebar { top: 0; }
+    }
+  </style>
+  <style>
+    :root{
+  --bg:#f6f8fb;
+  --card:#ffffff;
+  --muted:#64748b;
+  --accent1:#6366f1;
+  --accent2:#06b6d4;
+  --glass: rgba(255,255,255,0.6);
+}
+
+/* Main area refinement */
+.main{padding:28px 32px;}
+.topbar{display:flex;align-items:center;gap:18px;padding:14px 18px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));box-shadow:0 6px 20px rgba(20,24,40,0.06);}
+.topbar h1{font-family:'Saira',system-ui,Segoe UI,Roboto;font-weight:700;color:#0f172a;margin:0;font-size:1.1rem}
+
+/* Topbar user button */
+#topbarUser button{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid rgba(15,23,42,0.04);background:linear-gradient(180deg,var(--glass),#fff);cursor:pointer}
+#topbarUser button span{font-weight:600;color:#0f172a;font-size:0.95rem}
+#topbarUser button i{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;padding:8px;border-radius:50%;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;font-size:0.9rem}
+
+@media (max-width:900px){
+  .main{padding:16px}
+  .transaction-table thead th{font-size:0.78rem}
+}
+  </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">📊 Admin</span>
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+        <span class="toggle-bar"></span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
+      <a class="active" href="transactions.html"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
+      <a href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
+      <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
+      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Acceuille</span></a>
+    </nav>
+  </aside>
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="topbar">
+      <button id="mobileMenuToggle" class="mobile-menu-btn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <h1>Transactions</h1>
+      <div class="user" id="topbarUser">
+        <button><span>John Doe</span>
+        <i class="fa fa-user" aria-hidden="true"></i></button>
+      </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="pages-header">
+      <h2 style="margin-bottom: 20px;"><i class="bi bi-receipt-cutoff"></i> Historique des Transactions</h2>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="stats-summary">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-ticket-perforated"></i></div>
+        <div class="stat-info">
+          <h4 id="totalTicker">156</h4>
+          <p>Total Tickets</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
+        <div class="stat-info">
+          <h4 id="ticketValide">89</h4>
+          <p>Tickets Valides</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="bi bi-x-circle"></i></div>
+        <div class="stat-info">
+          <h4 id="ticketExpire">67</h4>
+          <p>Tickets Expirés</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple"><i class="bi bi-cash-stack"></i></div>
+        <div class="stat-info">
+          <h4 id="revenuTotal">245,000 Fcfa</h4>
+          <p>Revenu Total</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="dateFrom">De :</label>
+        <input type="date" id="dateFrom">
+      </div>
+      <div class="filter-group">
+        <label for="dateTo">À :</label>
+        <input type="date" id="dateTo">
+      </div>
+      <div class="filter-actions">
+        <button class="filter-btn" onclick="filterTransactions()">
+          <i class="bi bi-funnel"></i> Filtrer
+        </button>
+        <button class="reset-btn" onclick="resetFilter()">
+          <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
+        </button>
+      </div>
+    </div>
+
+    <!-- Transaction Table -->
+    <div class="table-container">
+      <div class="table-scroller">
+      <table class="transaction-table">
+        <thead>
+          <tr>
+            <th><i class="bi bi-calendar3"></i> Date</th>
+            <th><i class="bi bi-patch-check"></i> Statut</th>
+            <th><i class="bi bi-cash"></i> Coût</th>
+            <th><i class="bi bi-person"></i> Nom d'utilisateur</th>
+            <th><i class="bi bi-key"></i> Mot de passe</th>
+            <th><i class="bi bi-hdd-network"></i> Données</th>
+          </tr>
+        </thead>
+        <tbody id="transactionBody">
+          <tr>
+            <td>17 Déc 2025, 14:32</td>
+            <td><span class="status-badge valid">Valide</span></td>
+            <td class="cost-cell">1000 Fcfa</td>
+            <td><span class="credential">user_jd8k2</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Xk9#mP2z</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> Illimité</span></td>
+          </tr>
+          <tr>
+            <td>17 Déc 2025, 11:15</td>
+            <td><span class="status-badge valid">Valide</span></td>
+            <td class="cost-cell">500 Fcfa</td>
+            <td><span class="credential">user_mn3p7</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Qw5@rT1y</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> Illimité</span></td>
+          </tr>
+          <tr>
+            <td>16 Déc 2025, 18:45</td>
+            <td><span class="status-badge expired">Expiré</span></td>
+            <td class="cost-cell">300 Fcfa</td>
+            <td><span class="credential">user_ab2c9</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Lm8$nK4v</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> Illimité</span></td>
+          </tr>
+          <tr>
+            <td>16 Déc 2025, 09:22</td>
+            <td><span class="status-badge valid">Valide</span></td>
+            <td class="cost-cell">1500 Fcfa</td>
+            <td><span class="credential">user_xy7z4</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Hj3#pW9s</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> Illimité HD</span></td>
+          </tr>
+          <tr>
+            <td>15 Déc 2025, 20:10</td>
+            <td><span class="status-badge expired">Expiré</span></td>
+            <td class="cost-cell">100 Fcfa</td>
+            <td><span class="credential">user_qr5t1</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Bc6@fG2d</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> 2 GB</span></td>
+          </tr>
+          <tr>
+            <td>15 Déc 2025, 15:55</td>
+            <td><span class="status-badge valid">Valide</span></td>
+            <td class="cost-cell">2500 Fcfa</td>
+            <td><span class="credential">user_ef8g3</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Np4$kM7x</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> 50 GB</span></td>
+          </tr>
+          <tr>
+            <td>14 Déc 2025, 12:30</td>
+            <td><span class="status-badge expired">Expiré</span></td>
+            <td class="cost-cell">700 Fcfa</td>
+            <td><span class="credential">user_hi2j6</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Yt9#wE5q</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> 10 GB</span></td>
+          </tr>
+          <tr>
+            <td>14 Déc 2025, 08:18</td>
+            <td><span class="status-badge valid">Valide</span></td>
+            <td class="cost-cell">3500 Fcfa</td>
+            <td><span class="credential">user_kl4m8</span></td>
+            <td>
+              <span class="credential password">
+                <span class="hidden-pass">••••••••</span>
+                <span class="real-pass">Zx1@cV3b</span>
+              </span>
+            </td>
+            <td><span class="data-badge"><i class="bi bi-wifi"></i> Illimité</span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <!-- Pagination (inside the table card but outside the horizontal scroller) -->
+      <div class="pagination">
+        <button disabled><i class="bi bi-chevron-left"></i></button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+  // Sidebar toggle (same as dashboard)
+  (function(){
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const overlay = document.getElementById('sidebarOverlay');
+    const body = document.body;
+
+    function isMobile() { return window.innerWidth <= 900; }
+
+    if (!isMobile() && localStorage.getItem('sidebarCollapsed') === '1') {
+      body.classList.add('sidebar-collapsed');
+    }
+
+    function toggleSidebar(e) {
+      if (e) e.stopPropagation();
+      if (isMobile()) {
+        body.classList.toggle('sidebar-open');
+      } else {
+        const collapsed = body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+      }
+    }
+
+    toggle.addEventListener('click', toggleSidebar);
+    mobileToggle.addEventListener('click', toggleSidebar);
+
+    overlay.addEventListener('click', function() {
+      body.classList.remove('sidebar-open');
+    });
+
+    sidebar.querySelectorAll('.sidebar-nav a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (isMobile()) body.classList.remove('sidebar-open');
+      });
+    });
+
+    window.addEventListener('resize', function() {
+      if (isMobile()) {
+        body.classList.remove('sidebar-collapsed');
+      } else {
+        body.classList.remove('sidebar-open');
+      }
+    });
+  })();
+
+  // Filter functions
+  function filterTransactions() {
+    const from = document.getElementById('dateFrom').value;
+    const to = document.getElementById('dateTo').value;
+    // Placeholder: In real app, filter table rows or fetch from API
+    console.log('Filtering from', from, 'to', to);
+    alert('Filtrage du ' + (from || '...') + ' au ' + (to || '...') + '\n(Fonctionnalité à connecter au backend)');
+  }
+
+  function resetFilter() {
+    document.getElementById('dateFrom').value = '';
+    document.getElementById('dateTo').value = '';
+    // Placeholder: Reset table to show all
+    console.log('Filter reset');
+  }
+</script>
+
+<script>
+  // Fill topbar username from auth or localStorage
+  document.addEventListener('DOMContentLoaded', function(){
+    function getUser(){
+      try{ if(window.getAuth && typeof window.getAuth === 'function'){ const a = window.getAuth(); if(a && a.user) return a.user; } }catch(e){}
+      try{ const raw = localStorage.getItem('authUser'); return raw ? JSON.parse(raw) : null; }catch(e){ return null; }
+    }
+    const user = getUser();
+    const container = document.getElementById('topbarUser');
+    if(!container) return;
+    if(user){
+      const name = user.nom || user.name || user.username || user.numeroWhatsapp || user.phone || 'Utilisateur';
+      container.innerHTML = '<button><span>' + name + '</span><i class="fa fa-user" aria-hidden="true"></i></button>';
+    }
+  });
+</script>
+
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    const raw = localStorage.getItem('roles');
+    if(!raw) return;
+    let roles = null; try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
+    let hasPart = false;
+    if (Array.isArray(roles)) {
+      hasPart = roles.includes('particulier') || roles.includes('PARTICULIER');
+    } else if (typeof roles === 'string') {
+      hasPart = roles.toLowerCase().indexOf('particulier') !== -1;
+    }
+    if (hasPart) {
+      // redirect particulier users away from transactions page
+      window.location.href = 'dashboard.html';
+    }
+  } catch(e) { /* ignore */ }
+});
+</script>
+
+</body>
+</html>

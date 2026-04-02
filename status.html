@@ -9,6 +9,147 @@ $(endif)
 <meta http-equiv="expires" content="-1">
 <title>Internet hotspot - Status</title>
 <link rel="stylesheet" href="css/style.css">
+
+<style>
+    /* Status page navbar (page-local)
+         Matches existing palette from css/style.css (e.g., #3e4d59 / #33404a) */
+    header.navbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(62, 77, 89, 0.55);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    header.navbar .nav-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    header.navbar .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    header.navbar .nav-links a,
+    header.navbar .nav-links .drop-btn {
+        color: rgba(255, 255, 255, 0.92);
+        text-decoration: none;
+        padding: 9px 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    header.navbar .nav-links a:hover,
+    header.navbar .nav-links .drop-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    header.navbar .nav-links a.active {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+    }
+
+    header.navbar .nav-links a:focus-visible,
+    header.navbar .nav-links .drop-btn:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.75);
+        outline-offset: 2px;
+    }
+
+    header.navbar .dropdown {
+        position: relative;
+    }
+
+    header.navbar .drop-btn {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        line-height: 1;
+        font: inherit;
+    }
+
+    header.navbar .arrow {
+        font-size: 0.85em;
+        opacity: 0.9;
+    }
+
+    header.navbar .dropdown-content {
+        display: none;
+        position: absolute;
+        /* No gap between button and menu (prevents hover from dropping) */
+        top: 100%;
+        left: 0;
+        min-width: 190px;
+        padding: 8px;
+        border-radius: 12px;
+        background: rgba(62, 77, 89, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+        z-index: 60;
+    }
+
+    /* Hover bridge: prevents dropdown from closing while moving cursor */
+    header.navbar .dropdown-content::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -10px;
+        height: 10px;
+    }
+
+    header.navbar .dropdown:hover .dropdown-content,
+    header.navbar .dropdown:focus-within .dropdown-content {
+        display: block;
+    }
+
+    header.navbar .dropdown-content a {
+        display: block;
+        padding: 10px 10px;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    header.navbar .dropdown-content a:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Slightly tighten on very small screens */
+    @media (max-width: 420px) {
+        header.navbar .nav-container {
+            padding: 10px 10px;
+        }
+        header.navbar .nav-links a,
+        header.navbar .nav-links .drop-btn {
+            padding: 8px 10px;
+        }
+    }
+
+    /* Fallback when backdrop-filter isn't supported */
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        header.navbar {
+            background: rgba(62, 77, 89, 0.85);
+        }
+    }
+</style>
+
+
 <script>
 
 $(if advert-pending == 'yes')
@@ -31,6 +172,32 @@ $(endif)
     
 </head>
 <body $(if advert-pending == 'yes') onLoad="openAdvert()" $(endif)>
+    <!-- Navbar Start -->
+        <header class="navbar">
+    <div class="nav-container">
+
+
+        <!-- NAV LINKS -->
+        <nav class="nav-links">
+            <a href="index.html">Accueil</a>
+            <a href="about.html">À propos de nous</a>
+
+            <div class="dropdown">
+                <button class="drop-btn">Catégorie <i class="arrow">▼</i></button>
+                <div class="dropdown-content">
+                    <a href="messi.html">Particulier</a>
+                    <!-- <a href="famille.html">Famille</a>
+                    <a href="entreprise.html">Entreprise</a> -->
+                </div>
+            </div>
+
+            <a href="contact.html">Contact</a>
+            <a class="active" href="status.html">Status</a>
+            </nav>
+
+            </div>
+        </header>
+
     <div class="ie-fixMinHeight">
         <div class="main">
             <div class="wrap">

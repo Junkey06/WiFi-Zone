@@ -131,7 +131,7 @@ paymentForm.onsubmit = async function(e) {
   const payload = { numero, montant, categorie, idForfait, idUser };
 
   // API URL
-  const apiUrl = 'http://10.0.10.8:7071/api/wifi/payment';
+  const apiUrl = 'http://192.168.10.8:7071/api/wifi/payment';
 
   submitBtn.disabled = true;
   const oldText = submitBtn.textContent;

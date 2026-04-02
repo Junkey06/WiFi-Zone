@@ -260,8 +260,9 @@
             <div class="container">
                 <div class="d-flex justify-content-between topbar">
                     <div class="top-info">
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>23 Ranking Street, New York</small>
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>Email@Example.com</small>
+                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>Rue Foe, Dépôt de gaz Essos, Yaoundé 
+</small>
+                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>infos@ecolab-hightech.com</small>
                     </div>
                     <div id="note" class="text-secondary d-none d-xl-flex"><small>Note : We help you to Grow your Business</small></div>
                     <div class="top-link">
@@ -689,21 +690,21 @@ $(endif)
 
             <div class="contact-item">
                 <i class="fas fa-map-marker-alt"></i>
-                <a href="#"><p>123 Street, New York, USA</p></a>
+                <a href="#"><p>Rue Foe, Dépôt de gaz Essos, Yaoundé</p></a>
             </div>
 
             <div class="line"></div>
 
             <div class="contact-item">
                 <i class="fas fa-phone-alt"></i>
-                <a href="tel:+1234567890">+123 456 7890</a>
+                <a href="tel:+237 654929316">+237 654929316</a>
             </div>
 
             <div class="line"></div>
 
             <div class="contact-item">
                 <i class="fas fa-envelope"></i>
-                <a href="mailto:info@example.com">info@example.com</a>
+                <a href="mailto:infos@ecolab-hightech.com ">infos@ecolab-hightech.com </a>
             </div>
         </div>
 
@@ -931,124 +932,40 @@ $(endif)
 </script>
 <!-- ========== END WHATSAPP POPUP ========== -->
 
-<!-- ========== NJOH DATA: click counter + free-ticket integration ========== -->
+<!-- ========== NJOH DATA: trigger MikroTik free trial link (no API) ========== -->
 <script>
 (function(){
-  const BTN_SEL = '.njoh-btn';
-  const STORAGE_KEY = 'njoh_clicks';
-  const API_URL = 'http://10.0.10.8:7071/api/wifi/free-ticket/';
-
-  const btn = document.querySelector(BTN_SEL);
+  const btn = document.querySelector('.njoh-btn');
   if(!btn) return;
 
-  // initialize count
-  let count = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10) || 0;
-
-  function setCount(n){
-    count = n; localStorage.setItem(STORAGE_KEY, String(n));
+  function findTrialLink(){
+    const inline = document.getElementById('inline-login');
+    const scope = inline || document;
+    let a = scope.querySelector('a[href*="username=T-"]');
+    if(!a){
+      const candidates = Array.from(scope.querySelectorAll('a'));
+      a = candidates.find(x => ((x.textContent || '').trim().toLowerCase() === 'click here')) || null;
+    }
+    return a;
   }
 
-  // visual hint (small aria-live update)
-  let live = document.getElementById('njoh-live-counter');
-  if(!live){
-    live = document.createElement('div');
-    live.id = 'njoh-live-counter';
-    live.style.position = 'absolute';
-    live.style.left = '-9999px';
-    live.setAttribute('aria-live','polite');
-    document.body.appendChild(live);
-  }
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
 
-  btn.addEventListener('click', async function onNjohClick(e){
-    // read current count but don't persist for the first click until API confirms success
-    const prev = parseInt(localStorage.getItem(STORAGE_KEY) || '0',10) || 0;
-
-    // EARLY NO-OP GUARD: once persisted to 2, further clicks must do nothing.
-    if(prev >= 2){
-      try{ live.textContent = 'Déjà activé'; }catch(e){}
-      return; // no API calls, no modals, nothing
+    const inline = document.getElementById('inline-login');
+    if(inline){
+      try{ inline.scrollIntoView({ behavior: 'smooth', block: 'center' }); }catch(err){}
     }
 
-    const next = prev + 1;
-    if(prev === 0){
-      // transient hint while waiting for API
-      live.textContent = 'Demande en cours…';
-    } else if(prev === 1) {
-      // second click: do NOT persist the second click here — open signup modal below
-      live.textContent = 'Ouverture inscription…';
-    }
-    // helper: request free-ticket and handle response, persisting the provided count only on success
-    async function requestFreeTicketAndPersist(persistCount){
-      const origLabel = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = 'Obtention du ticket…';
-      try{
-        const resp = await fetch(API_URL, { method: 'GET', cache: 'no-store' });
-        if(!resp.ok) throw new Error('HTTP ' + resp.status);
-        const data = await resp.json();
-        // only persist after successful API response
-        try{ setCount(persistCount); live.textContent = 'Clicks: ' + persistCount; }catch(e){}
-
-        const user = data.usernameWifi || data.username || data.user || '';
-        const pass = data.passwordWifi || data.password || data.pass || '';
-
-        // populate inline mikrotik login form if present and auto-submit
-        try{
-          const inlineForm = document.forms['inlineLogin'];
-          if(inlineForm){
-            if(inlineForm.username) inlineForm.username.value = user;
-            if(inlineForm.password) inlineForm.password.value = pass;
-            const submitBtn = inlineForm.querySelector('input[type=submit], button[type=submit]');
-            if(submitBtn) submitBtn.click();
-            else if(typeof inlineForm.requestSubmit === 'function') inlineForm.requestSubmit();
-            else inlineForm.submit();
-          } else {
-            // fallback: try visible hotspot login form named 'login'
-            const loginForm = document.forms['login'];
-            if(loginForm){
-              if(loginForm.username) loginForm.username.value = user;
-              if(loginForm.password) loginForm.password.value = pass;
-              const submitBtn2 = loginForm.querySelector('input[type=submit], button[type=submit]');
-              if(submitBtn2) submitBtn2.click(); else loginForm.submit();
-            }
-          }
-        }catch(innerErr){ console.error('Njoh: failed to populate login form', innerErr); }
-
-      }catch(err){
-        console.error('Njoh free-ticket error', err);
-        alert('Erreur lors de la récupération du ticket. Vérifiez la console.');
-      }finally{
-        btn.disabled = false;
-        setTimeout(()=>{ try{ btn.innerHTML = origLabel; }catch(e){} }, 1200);
-      }
+    const a = findTrialLink();
+    if(a && a.href){
+      // behave like clicking the MikroTik free trial link
+      window.location.href = a.href;
+      return;
     }
 
-    // only call API on first click (when prev === 0)
-    if(prev === 0){
-      await requestFreeTicketAndPersist(next);
-
-    // second click: if user already signed in, request free-ticket and persist; otherwise open signup modal
-    } else if(prev === 1){
-      try{
-        // detect signed-in user by localStorage keys (authUser or authToken)
-        const authUser = localStorage.getItem('authUser');
-        const authToken = localStorage.getItem('authToken');
-        if(authUser || authToken){
-          // user already signed — call free-ticket and persist njoh_clicks=2 only on success
-          await requestFreeTicketAndPersist(next);
-        } else {
-          localStorage.setItem('njoh_flow','1');
-          const signupModal = document.getElementById('signupModal');
-          if(signupModal){ signupModal.style.display = 'flex'; }
-          const nameInput = document.getElementById('nom');
-          if(nameInput) nameInput.focus();
-        }
-      }catch(e){ console.warn('Failed to handle second click', e); }
-
-    } else {
-      // subsequent clicks: call free-ticket and persist only after OK
-      await requestFreeTicketAndPersist(next);
-    }
+    // fallback: open the login modal if present (still no API calls)
+    try{ if(typeof openLoginModal === 'function') openLoginModal(); }catch(err){}
   });
 })();
 </script>

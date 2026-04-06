@@ -14,6 +14,8 @@ background-size: cover;
 .dashboard {
   display: flex;
   min-height: 100vh;
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Sidebar */
@@ -151,9 +153,11 @@ background-size: cover;
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Main */
+/* Main — min-width:0 permet au tableau scrollable de rester dans la largeur écran (sinon le flex s’étire et body clippe tout) */
 .main {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
   padding: 24px 30px;
   margin-left: 240px;
   transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
@@ -356,8 +360,6 @@ button {
   .user span { display: none; }
   .sidebar { width: 100%; }
   .box { padding: 16px; }
-  .offer-table thead th,
-  .offer-table tbody td { padding: 10px 8px; font-size: 0.85rem; }
 }
 
 /* Hide mobile button on desktop - must come BEFORE media queries or use proper specificity */
@@ -368,15 +370,22 @@ button {
 /* Dashboard-specific: make offer box occupy full content area */
 .content {
   grid-template-columns: 1fr !important;
+  min-width: 0;
 }
 .content .box {
   width: 100%;
   max-width: 100%;
   margin: 0;
   border-radius: 12px;
+  min-width: 0;
 }
 
-/* Offer table styles copied from main site stylesheet to match original look */
+.dashboard .content > section {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Offer table styles (même rendu partout ; petit écran = scroll dans .table-responsive, voir mobile.css) */
 .offer-table {
   border-collapse: separate;
   border-spacing: 0;
@@ -386,7 +395,7 @@ button {
   overflow: hidden;
   background: linear-gradient(180deg,#ffffff,#fbfdff);
   box-shadow: 0 8px 24px rgba(2,6,23,0.06);
-  table-layout: fixed;
+  table-layout: auto;
 }
 .offer-table thead th {
   text-align: left;
@@ -397,7 +406,8 @@ button {
   border-bottom: none;
   letter-spacing: 0.2px;
   font-size: 0.95rem;
-  word-break: break-word;
+  white-space: nowrap;
+  word-break: normal;
 }
 .offer-table tbody td {
   padding: 14px 18px;
@@ -405,8 +415,10 @@ button {
   vertical-align: middle;
   color: #0f172a;
   background: transparent;
-  white-space: normal;
-  word-break: break-word;
+  word-break: normal;
+}
+.offer-table tbody td:not(:first-child) {
+  white-space: nowrap;
 }
 .offer-table tbody tr.offer-row {
   cursor: pointer;
@@ -441,5 +453,16 @@ button {
 .offer-table tbody tr.offer-row:nth-child(4) td:first-child { background: #60a5fa; color: #ffffff; }
 .offer-table tbody tr.offer-row:hover td:first-child { filter: brightness(0.95); }
 
-.table-responsive { overflow-x:auto; border-radius:12px; padding:6px; background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.85)); box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02); }
+.table-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y pinch-zoom;
+  border-radius: 12px;
+  padding: 6px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.85));
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
+}
 

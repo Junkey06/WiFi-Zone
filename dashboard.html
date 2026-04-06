@@ -26,47 +26,49 @@
   <!-- Dashboard specific overrides -->
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/topbar.css">
+
+  <!-- ✅ TABLE FIX: prevent text truncation with ... on small screens -->
 </head>
 <body>
 
 
   <!-- OFFER DETAILS MODAL -->
-      <div id="offerDetailsModal" class="modal" style="display:none;">
-        <div class="modal-dialog offer-details-box">
-          <div class="offer-details-content">
+  <div id="offerDetailsModal" class="modal" style="display:none;">
+    <div class="modal-dialog offer-details-box">
+      <div class="offer-details-content">
 
-            <button class="close-offer-details" aria-label="Fermer">&times;</button>
+        <button class="close-offer-details" aria-label="Fermer">&times;</button>
 
-            <div class="offer-details-grid">
-              <div class="offer-media">
-                <div class="od-icon"><i class="bi bi-gift-fill"></i></div>
+        <div class="offer-details-grid">
+          <div class="offer-media">
+            <div class="od-icon"><i class="bi bi-gift-fill"></i></div>
+          </div>
+
+          <div class="offer-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h2 id="od_title" class="mb-1"></h2>
+                <p id="od_subtitle" class="od-subtext mb-2"></p>
               </div>
-
-              <div class="offer-body">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div>
-                    <h2 id="od_title" class="mb-1"></h2>
-                    <p id="od_subtitle" class="od-subtext mb-2"></p>
-                  </div>
-                  <div class="offer-price-badge"><span id="od_price"></span></div>
-                </div>
-
-                <div class="od-meta">
-                  <span class="offer-badge time"><i class="bi bi-clock"></i> <span id="od_duration"></span></span>
-                  <span class="offer-badge data"><i class="bi bi-hdd-network"></i> <span id="od_data"></span></span>
-                  <span class="offer-badge speed"><i class="bi bi-speedometer2"></i> <span id="od_speed"></span></span>
-                </div>
-
-                <div class="od-desc mt-3"><p id="od_description"></p></div>
-
-                <button id="od_pay_btn" class="btn btn-primary w-100 mt-4">Générer Le Ticket</button>
-                <small class="text-muted d-block mt-2">En cliquant, Le Ticket sera Générer.</small>
-              </div>
+              <div class="offer-price-badge"><span id="od_price"></span></div>
             </div>
 
+            <div class="od-meta">
+              <span class="offer-badge time"><i class="bi bi-clock"></i> <span id="od_duration"></span></span>
+              <span class="offer-badge data"><i class="bi bi-hdd-network"></i> <span id="od_data"></span></span>
+              <span class="offer-badge speed"><i class="bi bi-speedometer2"></i> <span id="od_speed"></span></span>
+            </div>
+
+            <div class="od-desc mt-3"><p id="od_description"></p></div>
+
+            <button id="od_pay_btn" class="btn btn-primary w-100 mt-4">Générer Le Ticket</button>
+            <small class="text-muted d-block mt-2">En cliquant, Le Ticket sera Générer.</small>
           </div>
         </div>
+
       </div>
+    </div>
+  </div>
 
 <div class="dashboard">
 
@@ -86,7 +88,7 @@
       <a href="transactions.html"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
       <a href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
       <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
-      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Acceuille</span></a>
+      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Accueil</span></a>
     </nav>
   </aside>
 
@@ -126,7 +128,8 @@
 
     <section id="dashboardContent" class="content">
 
-     <section class="mb-5">
+      <!-- Offres Jour (Courte Durée) -->
+      <section class="mb-5">
         <h3 class="text-primary text-center mb-4">💨 Offres Jour (Courte Durée)</h3>
         <div class="table-responsive">
           <table class="offer-table w-100">
@@ -194,10 +197,7 @@
         </div>
       </section>
 
-
-
-
-      <!-- Offres Journalières (table) -->
+      <!-- Offre Illimitée_Jour -->
       <section class="mb-5">
         <h3 class="text-primary text-center mb-4">☀️ Offre Illimitée_Jour</h3>
         <div class="table-responsive">
@@ -246,11 +246,11 @@
                 <td>2</td>
               </tr>
             </tbody>
-            
           </table>
         </div>
       </section>
 
+      <!-- Offres Illimitées_Mois -->
       <section class="mb-5">
         <h3 class="text-primary text-center mb-4">📅 Offres Illimitées_Mois</h3>
         <div class="table-responsive">
@@ -311,6 +311,8 @@
         </div>
       </section>
 
+    </section><!-- end dashboardContent -->
+
   </main>
 
 </div>
@@ -335,7 +337,6 @@
       body.classList.add('sidebar-collapsed');
     }
 
-    // Toggle sidebar (desktop: collapse, mobile: slide open)
     function toggleSidebar(e) {
       if (e) e.stopPropagation();
       if (isMobile()) {
@@ -349,19 +350,16 @@
     toggle.addEventListener('click', toggleSidebar);
     mobileToggle.addEventListener('click', toggleSidebar);
 
-    // Close mobile sidebar on overlay click
     overlay.addEventListener('click', function() {
       body.classList.remove('sidebar-open');
     });
 
-    // Close mobile sidebar when clicking a nav link
     sidebar.querySelectorAll('.sidebar-nav a').forEach(function(link) {
       link.addEventListener('click', function() {
         if (isMobile()) body.classList.remove('sidebar-open');
       });
     });
 
-    // Handle resize: normalize classes
     window.addEventListener('resize', function() {
       if (isMobile()) {
         body.classList.remove('sidebar-collapsed');
@@ -377,7 +375,6 @@
 
 <!-- Ticket result popup CSS + HTML + JS -->
 <style>
-/* Ticket popup */
 .ticket-popup-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:99999;visibility:hidden;opacity:0;transition:opacity .22s,visibility .22s}
 .ticket-popup-overlay.show{visibility:visible;opacity:1}
 .ticket-popup{background:linear-gradient(135deg,#0f172a 0%,#0b2540 100%);color:#fff;border-radius:12px;padding:22px;max-width:420px;width:92%;box-shadow:0 18px 50px rgba(2,6,23,0.6);text-align:left}
@@ -421,27 +418,22 @@
 
 <script>
 (function(){
-  // assign idForfait to offer rows if missing and wire click-to-open modal
   const rows = Array.from(document.querySelectorAll('.offer-row'));
   let currentIdForfait = null;
 
   function makeId(seed, i){
     if(!seed) seed = 'offer';
-    // simple slug + index
     return seed.toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + (i+1);
   }
 
   rows.forEach((r,i) => {
-    // ensure data-idforfait exists
     if(!r.dataset.idforfait){
-      // prefer data-offer-id or data-title
       const base = r.dataset.offerId || r.dataset.title || r.innerText.slice(0,20);
       r.dataset.idforfait = makeId(base,i);
     }
 
     r.style.cursor = 'pointer';
     r.addEventListener('click', function(){
-      // populate modal fields
       const title = r.dataset.title || r.querySelector('td')?.innerText || 'Offre';
       const price = r.dataset.price || r.cells && r.cells[1] && r.cells[1].innerText || '';
       const data = r.dataset.data || r.dataset['data'] || '';
@@ -463,16 +455,13 @@
       if(descEl) descEl.textContent = desc;
       if(speedEl) speedEl.textContent = speed;
 
-      // store current id
       currentIdForfait = r.dataset.idforfait;
 
-      // show offer modal (existing modal uses id 'offerDetailsModal')
       const modal = document.getElementById('offerDetailsModal');
       if(modal) modal.style.display = 'flex';
     });
   });
 
-  // API call flow when clicking generate button
   const generateBtn = document.getElementById('od_pay_btn');
   const ticketOverlay = document.getElementById('ticketPopup');
   const tpUsername = document.getElementById('tpUsername');
@@ -495,15 +484,12 @@
         return;
       }
 
-      // show loading state
       generateBtn.disabled = true;
       const origText = generateBtn.textContent;
       generateBtn.textContent = 'Génération…';
 
-      // New API: POST /api/wifi/generate-ticket/ expects JSON { idForfait, idUser }
       const apiUrl = 'http://192.168.10.8:7071/api/wifi/generate-ticket/';
 
-      // derive current user id from localStorage.authUser robustly
       let idUser = null;
       try{
         const raw = localStorage.getItem('authUser');
@@ -525,7 +511,6 @@
           return resp.json();
         })
         .then(data => {
-          // expected { username, password } or { usernameWifi, passwordWifi }
           const user = data.username || data.user || data.usernameWifi || '';
           const pass = data.password || data.pass || data.passwordWifi || '';
           showTicketPopup(user, pass);
@@ -541,7 +526,6 @@
     });
   }
 
-  // copy handlers
   if(copyUser) copyUser.addEventListener('click', function(){
     navigator.clipboard.writeText(tpUsername.textContent.replace('Nom d\'utilisateur: ','')).then(()=>{
       copyUser.textContent = 'Copié!'; setTimeout(()=>copyUser.textContent='Copier',1200);
@@ -556,7 +540,6 @@
   if(tpClose) tpClose.addEventListener('click', hideTicketPopup);
   if(ticketOverlay) ticketOverlay.addEventListener('click', function(e){ if(e.target === ticketOverlay) hideTicketPopup(); });
 
-  // close offer modal close button if exists
   try{
     const closeBtn = document.querySelector('.close-offer-details');
     if(closeBtn) closeBtn.addEventListener('click', function(){
@@ -574,19 +557,26 @@ document.addEventListener('DOMContentLoaded', function(){
     if(!raw) return;
     let roles = null;
     try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
-    let hasPart = false;
+    const normalize = function(v){ return String(v || '').trim().toLowerCase(); };
+    let roleList = [];
     if (Array.isArray(roles)) {
-      hasPart = roles.includes('particulier') || roles.includes('PARTICULIER');
+      roleList = roles.map(normalize).filter(Boolean);
     } else if (typeof roles === 'string') {
-      hasPart = roles.toLowerCase().indexOf('particulier') !== -1;
+      roleList = roles.split(/[,\s;|]+/).map(normalize).filter(Boolean);
+    } else if (roles && typeof roles === 'object') {
+      roleList = [normalize(roles.role || roles.name || roles.code)];
     }
-    if (hasPart) {
+
+    const hasPart = roleList.includes('particulier');
+    const hasPrivileged = roleList.includes('agent') || roleList.includes('admin') || roleList.includes('entreprise') || roleList.includes('famille');
+
+    // Restrict only "particulier-only" users. If agent/admin is present, keep dashboard access.
+    if (hasPart && !hasPrivileged) {
       const stats = document.getElementById('dashboardStats');
       const content = document.getElementById('dashboardContent');
       if (stats) stats.style.display = 'none';
       if (content) content.style.display = 'none';
 
-      // hide sidebar links except notifications and change password
       try{
         const nav = document.querySelector('.sidebar-nav');
         if(nav){
@@ -598,14 +588,12 @@ document.addEventListener('DOMContentLoaded', function(){
         }
       }catch(e){}
 
-      // Insert a styled restricted-access card with links to Notifications and Change Password
       const main = document.querySelector('main');
       if (main) {
         const card = document.createElement('div');
         card.className = 'restricted-card';
         card.innerHTML = '\n          <div class="restricted-inner">\n            <div class="restricted-icon">🔒</div>\n            <div class="restricted-body">\n              <h2>Accès restreint</h2>\n              <p>Votre compte est de type <strong>Particulier</strong>. Seuls les éléments suivants sont disponibles :</p>\n              <ul>\n                <li><a href="notifications.html">Notifications</a></li>\n                <li><a href="changepassword.html">Changer le mot de passe</a></li>\n              </ul>\n            </div>\n          </div>\n        ';
 
-        // add minimal styles for the card if not present
         try{
           if(!document.getElementById('restricted-card-style')){
             const s = document.createElement('style'); s.id = 'restricted-card-style';

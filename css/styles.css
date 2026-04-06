@@ -857,8 +857,7 @@ h3.text-primary.text-center.mb-4 {
     overflow: hidden;
     background: linear-gradient(180deg,#ffffff,#fbfdff);
     box-shadow: 0 8px 24px rgba(2,6,23,0.06);
-    /* Force table columns to respect container width and allow wrapping */
-    table-layout: fixed;
+    table-layout: auto;
 }
 .offer-table thead th {
     text-align: left;
@@ -869,6 +868,8 @@ h3.text-primary.text-center.mb-4 {
     border-bottom: none;
     letter-spacing: 0.2px;
     font-size: 0.95rem;
+    white-space: nowrap;
+    word-break: normal;
 }
 .offer-table tbody td {
     padding: 14px 18px;
@@ -876,33 +877,26 @@ h3.text-primary.text-center.mb-4 {
     vertical-align: middle;
     color: #0f172a;
     background: transparent;
-    /* allow long text to wrap instead of causing overflow */
-    white-space: normal;
-    word-break: break-word;
+    word-break: normal;
 }
-
-/* Ensure header cells also wrap on small widths */
-.offer-table thead th {
-    word-break: break-word;
+.offer-table tbody td:not(:first-child) {
+    white-space: nowrap;
 }
 .offer-table tbody tr.offer-row {
     cursor: pointer;
     transition: background-color .18s ease, transform .12s ease, box-shadow .12s ease;
 }
 .offer-table tbody tr.offer-row:hover {
-    /* richer gradient highlight + slight scale for depth */
     background: linear-gradient(90deg, rgba(99,102,241,0.10), rgba(6,182,212,0.08));
     transform: translateY(-4px) scale(1.01);
     box-shadow: 0 10px 30px rgba(2,6,23,0.08), inset 6px 0 0 rgba(99,102,241,0.12);
     transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
 }
 
-/* Slightly emphasize text colors on hover for better contrast */
 .offer-table tbody tr.offer-row:hover td {
     color: #06263b;
 }
 
-/* Accessible focus style (if rows are made focusable later) */
 .offer-table tbody tr.offer-row:focus-visible {
     outline: none;
     box-shadow: 0 12px 36px rgba(2,6,23,0.10), inset 6px 0 0 rgba(99,102,241,0.14);
@@ -927,7 +921,6 @@ h3.text-primary.text-center.mb-4 {
     text-overflow: ellipsis;
 }
 
-/* Distinct Slogan cell colors per row (applies per-table) */
 .offer-table tbody tr.offer-row:nth-child(1) td:first-child { background: #ff7a59; color: #ffffff; }
 .offer-table tbody tr.offer-row:nth-child(2) td:first-child { background: #ffd166; color: #1f2937; }
 .offer-table tbody tr.offer-row:nth-child(3) td:first-child { background: #6ee7b7; color: #064e3b; }
@@ -936,7 +929,18 @@ h3.text-primary.text-center.mb-4 {
 .offer-table tbody tr.offer-row:nth-child(6) td:first-child { background: #81c12e; color: #ffffff; }
 .offer-table tbody tr.offer-row:hover td:first-child { filter: brightness(0.95); }
 
-.table-responsive { overflow-x:auto; border-radius:12px; padding:6px; background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.85)); box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02); }
+.table-responsive {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y pinch-zoom;
+    border-radius: 12px;
+    padding: 6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.85));
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
+}
 
 #offerDetailsModal {
   position: fixed;

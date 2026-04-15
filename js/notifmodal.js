@@ -80,11 +80,11 @@ document.querySelectorAll('.notif-item').forEach(item => {
 });
 
 // Close modal
-closeBtn.addEventListener('click', () => {
-  modal.classList.remove('active');
+if(closeBtn) closeBtn.addEventListener('click', () => {
+  if(modal) modal.classList.remove('active');
 });
 
-modal.addEventListener('click', e => {
+if(modal) modal.addEventListener('click', e => {
   if (e.target === modal) modal.classList.remove('active');
 });
 

@@ -2,182 +2,174 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Transaction History — Admin</title>
+  <title>Notifications — Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Saira:wght@500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Icon Font Stylesheet -->
   <link rel="stylesheet" href="fontawesome/all.min.css">
   <link rel="stylesheet" href="bootstrap-icons/bootstrap-icons.css">
 
-  <!-- Template Stylesheets -->
   <link href="css/mini-bootstrap.css" rel="stylesheet">
   <link href="css/styles.css" rel="stylesheet">
   <link href="css/mobile.css" rel="stylesheet">
   <link href="css/notifmodal.css" rel="stylesheet">
-
-  <!-- Dashboard specific overrides -->
   <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/topbar.css">
+  <link href="css/topbar.css" rel="stylesheet">
+
+  <style>
+    .role-restricted { display: none !important; }
+    
+    .user-dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 110%;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      min-width: 160px;
+      z-index: 999;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-menu a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      color: #e53e3e;
+      text-decoration: none;
+    }
+  </style>
+
+  <script>
+    /* CONFIGURATION DES RÔLES (Anti-Glitch) */
+    (function() {
+      try {
+        const rawRoles = localStorage.getItem('roles');
+        const roles = rawRoles ? JSON.parse(rawRoles) : [];
+        const rolesArray = Array.isArray(roles) ? roles.map(r => r.toLowerCase()) : [roles.toLowerCase()];
+        
+        const isParticulier = rolesArray.includes('particulier');
+
+        if (isParticulier && !rolesArray.includes('admin')) {
+          const style = document.createElement('style');
+          style.innerHTML = '[data-nav="transactions"] { display: none !important; }';
+          document.head.appendChild(style);
+        }
+      } catch (e) { console.error(e); }
+    })();
+  </script>
 </head>
 <body>
 
-    <div id="notifModal" class="notif-modal">
-  <div class="notif-modal-box">
-    <button class="notif-close">&times;</button>
-
-    <h3 id="modalTitle"></h3>
-    <span id="modalDate"></span>
-
-    <p id="modalMessage"></p>
-  </div>
-</div>
-
-
-    <div class="dashboard">
-
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <span class="sidebar-logo">📊 Admin</span>
-      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
-        <span class="toggle-bar"></span>
-        <span class="toggle-bar"></span>
-        <span class="toggle-bar"></span>
-      </button>
-    </div>
-
-    <nav class="sidebar-nav">
-      <a href="dashboard.html"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
-      <a href="transactions.html"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
-      <a class="active" href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
-      <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
-      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Acceuille</span></a>
-    </nav>
-  </aside>
-
-  <!-- Mobile overlay -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-  <!-- Main -->
-  <main class="main">
-
-    <!-- Header -->
-    <header class="topbar">
-      <button id="mobileMenuToggle" class="mobile-menu-btn" aria-label="Open menu">
-        <span></span><span></span><span></span>
-      </button>
-      <h1>Notifications</h1>
-      <div class="user" id="topbarUser">
-        <button><span>John Doe</span>
-        <i class="fa fa-user" aria-hidden="true"></i></button>
+  <div class="dashboard">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo">📊 Agent</span>
       </div>
-    </header>
 
-    <!-- Page Header -->
-    <div class="pages-header">
-      <h2 style="margin-bottom: 20px;"><i class="bi bi-receipt-cutoff"></i> Historique des Notifications</h2>
-    </div>
+      <nav class="sidebar-nav">
+        <a href="#" id="dashboardLink"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
+        <a href="transactions.html" data-nav="transactions"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
+        <a class="active" href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
+        <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
+        <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Accueil</span></a>
+      </nav>
+    </aside>
 
-    <!-- Start of Notifications -->
-    <div class="notifications-wrapper">
+    <main class="main">
+      <header class="topbar">
+        <button id="mobileMenuToggle" class="mobile-menu-btn"><span></span><span></span><span></span></button>
+        <h1>Notifications</h1>
+        <div class="user">
+          <div class="user-dropdown">
+            <button id="userBtn">
+              <span id="userNameDisplay">Mon Compte</span> 
+              <i class="fa fa-user"></i>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <a href="#" id="logoutBtn"><i class="fa fa-sign-out"></i> Déconnexion</a>
+            </div>
+          </div>
+        </div>
+      </header>
 
-  <h2 class="notif-title">
-    20 Messages <span>(17 nouveaux)</span>
-  </h2>
-
-  <!-- Unread -->
-  <div class="notif-item unread"
-     data-title="ACTUDUCAMER"
-     data-date="17/12/2025 · 15:36"
-     data-message="Ne te laisse pas distraire, l'info SUR les opportunités actuelles peut changer ta situation aujourd'hui.">
-  <div class="notif-accent"></div>
-
-  <div class="notif-content">
-    <div class="notif-header">
-      <span class="notif-sender">ACTUDUCAMER</span>
-      <span class="notif-date">17/12/2025 · 15:36</span>
-    </div>
-    <div class="notif-message"></div>
-  </div>
-</div>
-
-  <!-- Unread -->
-  <div class="notif-item unread">
-    <div class="notif-accent"></div>
-
-    <div class="notif-content">
-      <div class="notif-header">
-        <span class="notif-sender">TonMillion</span>
-        <span class="notif-date">16/12/2025 · 10:37</span>
+      <div class="pages-header">
+        <h2><i class="bi bi-receipt-cutoff"></i> Historique des Notifications</h2>
       </div>
-      <p class="notif-message">
-        Chaque semaine, de nouveaux millions...
-      </p>
-    </div>
+
+      <div class="notifications-wrapper">
+         </div>
+    </main>
   </div>
 
-  <!-- Read -->
-  <div class="notif-item read">
-    <div class="notif-content">
-      <div class="notif-header">
-        <span class="notif-sender">PhoneDeal</span>
-        <span class="notif-date">15/12/2025 · 13:44</span>
-      </div>
-      <p class="notif-message">
-        Bon plan à Orange Playce ! Tes sma...
-      </p>
-    </div>
-  </div>
+  <script src="js/notifmodal.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/topbar.js"></script>
 
-  <!-- Read -->
-  <div class="notif-item read">
-    <div class="notif-content">
-      <div class="notif-header">
-        <span class="notif-sender">TonMillion</span>
-        <span class="notif-date">13/12/2025 · 10:08</span>
-      </div>
-      <p class="notif-message">
-        Les forfaits les plus généreux du mo...
-      </p>
-    </div>
-  </div>
-
-</div>
-
-</body>
-
-<script src="js/notifmodal.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/notifications.js"></script>
-<script src="js/topbar.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  try{
-    const raw = localStorage.getItem('roles');
-    if(!raw) return;
-    let roles = null; try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
-    let hasPart = false;
-    if (Array.isArray(roles)) hasPart = roles.includes('particulier') || roles.includes('PARTICULIER');
-    else if (typeof roles === 'string') hasPart = roles.toLowerCase().indexOf('particulier') !== -1;
-    if (hasPart) {
-      try{
-        const nav = document.querySelector('.sidebar-nav');
-        if(nav){
-          const anchors = Array.from(nav.querySelectorAll('a'));
-          anchors.forEach(a=>{
-            const href = a.getAttribute('href');
-            const keep = href === 'notifications.html' || href === 'changepassword.html' || href === 'index.html';
-            a.style.display = keep ? 'block' : 'none';
-          });
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      
+      // --- 1. RÉCUPÉRATION DU NOM DE L'UTILISATEUR ---
+      const userNameDisplay = document.getElementById('userNameDisplay');
+      try {
+        const userData = localStorage.getItem('authUser');
+        if (userData) {
+          const user = JSON.parse(userData);
+          // On cherche le nom dans les clés habituelles (nom, name, ou username)
+          const name = user.nom || user.name || user.username || user.firstName;
+          if (name) {
+            userNameDisplay.textContent = name;
+          }
         }
-      }catch(e){}
-    }
-  } catch(e) { /* ignore */ }
-});
-</script>
+      } catch (e) {
+        console.error("Erreur lors de la récupération du nom", e);
+      }
 
+      // --- 2. GESTION DU LIEN DYNAMIQUE DASHBOARD ---
+      const dashLink = document.getElementById('dashboardLink');
+      const rawRoles = localStorage.getItem('roles');
+      
+      if (dashLink && rawRoles) {
+        try {
+          const roles = JSON.parse(rawRoles);
+          const rolesArray = Array.isArray(roles) ? roles.map(r => r.toLowerCase()) : [roles.toLowerCase()];
+          
+          if (rolesArray.includes('particulier') && !rolesArray.includes('admin')) {
+            dashLink.href = 'dashboardp.html';
+          } else {
+            dashLink.href = 'dashboard.html';
+          }
+        } catch (e) {
+          dashLink.href = 'dashboard.html';
+        }
+      }
+
+      // --- 3. DROPDOWN & LOGOUT ---
+      const userBtn = document.getElementById('userBtn');
+      const dropdownMenu = document.getElementById('dropdownMenu');
+      if(userBtn) {
+        userBtn.onclick = (e) => { 
+          e.stopPropagation(); 
+          dropdownMenu.classList.toggle('open'); 
+        }
+      }
+      window.onclick = () => dropdownMenu.classList.remove('open');
+
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.onclick = (e) => {
+          e.preventDefault();
+          localStorage.clear();
+          window.location.href = 'index.html';
+        };
+      }
+    });
+  </script>
+</body>
 </html>

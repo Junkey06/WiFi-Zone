@@ -10,10 +10,12 @@ document.querySelectorAll('.offer-link').forEach(function(link) {
     document.body.style.overflow = 'hidden';
   });
 });
+
 document.getElementById('closeModalBtn').onclick = function() {
   document.getElementById('paymentModal').style.display = 'none';
   document.body.style.overflow = '';
 };
+
 window.onclick = function(event) {
   var modal = document.getElementById('paymentModal');
   if (event.target === modal) {
@@ -21,9 +23,11 @@ window.onclick = function(event) {
     document.body.style.overflow = '';
   }
 };
-// Prefix datasets (Cameroon)
+
+// Configuration Cameroun
 const MTN_PREFIXES = ['670','671','672','673','674','675','676','677','678','679','683','682'];
 const ORANGE_PREFIXES = ['690','691','692','693','694','695','696','697','698','699','655','640','659'];
+const NOTIFICATIONS_API_BASE = 'http://192.168.10.8:7071/api/wifi/notifications';
 
 function getOperatorTypeFromNumber(num) {
   const value = (num || '').trim();
@@ -34,7 +38,7 @@ function getOperatorTypeFromNumber(num) {
   return null;
 }
 
-// Operator detection UI logic
+// Détection opérateur UI
 const operatorLogo = document.getElementById('operatorLogo');
 const phoneInput = document.getElementById('phoneNumber');
 phoneInput.addEventListener('input', function() {
@@ -43,17 +47,17 @@ phoneInput.addEventListener('input', function() {
   let show = false;
   const operator = getOperatorTypeFromNumber(value);
   if (operator === 'MTN') {
-    logo = '<img src="img/mtn-momo.png" alt="MTN MoMo" style="height:32px; width:32px;">';
+    logo = '<img src="img/mtn-momo.png" alt="MTN" style="height:32px; width:32px;">';
     show = true;
   } else if (operator === 'ORANGE') {
-    logo = '<img src="img/orange-money.png" alt="Orange Money" style="height:32px; width:32px;">';
+    logo = '<img src="img/orange-money.png" alt="Orange" style="height:32px; width:32px;">';
     show = true;
   }
   operatorLogo.innerHTML = logo;
   operatorLogo.style.display = show ? 'inline-block' : 'none';
 });
 
-// Submit to backend API
+// Soumission du paiement
 const paymentForm = document.getElementById('paymentForm');
 paymentForm.onsubmit = async function(e) {
   e.preventDefault();
@@ -70,67 +74,23 @@ paymentForm.onsubmit = async function(e) {
     alert('Veuillez entrer un numéro à 9 chiffres.');
     return;
   }
-  if (!Number.isFinite(montant) || montant <= 0) {
-    alert('Montant invalide.');
-    return;
-  }
-  if (!type) {
-    alert('Type d\'offre manquant.');
-    return;
-  }
 
-  // determine signed-in user id (if any)
   let idUser = null;
   try {
-    if (window.getAuth && typeof window.getAuth === 'function'){
-      const a = window.getAuth(); if (a && a.user) {
-        const u = a.user;
-        idUser = u.id || u._id || u.idUser || u.userId || u.numeroWhatsapp || u.numero || u.phone || null;
-      }
+    const raw = localStorage.getItem('authUser');
+    if(raw){ 
+      const u = JSON.parse(raw); 
+      idUser = u.id || u.idUser || u.numero || null; 
     }
   } catch(e){}
-  try{
-    if(!idUser){
-      const raw = localStorage.getItem('authUser');
-      if(raw){ const u = JSON.parse(raw); idUser = u.id || u._id || u.idUser || u.userId || u.numeroWhatsapp || u.numero || u.phone || null; }
-    }
-  }catch(e){}
 
-  // if user is not signed in (no usable id), block purchase and show signup/signin
   if (!idUser) {
-    try {
-      var pm = document.getElementById('paymentModal');
-      if (pm) { pm.style.display = 'none'; }
-      document.body.style.overflow = '';
-    } catch(e){}
-
-    // show guidance message on the signup modal if available
-    try {
-      var sMsg = document.getElementById('signupMessage');
-      if (sMsg) {
-        sMsg.textContent = "Créez d'abord votre compte pour recevoir vos identifiants WiFi. Si vous avez déjà un compte, veuillez vous connecter avant d'effectuer un achat.";
-        sMsg.style.display = 'block';
-        sMsg.style.color = '#b00';
-      }
-    } catch(e){}
-
-    // open signup (preferred) or signin modal; fallback to login page
-    try {
-      if (typeof openSignup === 'function') {
-        openSignup();
-      } else if (typeof openSignin === 'function') {
-        openSignin();
-      } else {
-        window.location.href = 'login.html';
-      }
-    } catch(e){}
-
+    document.getElementById('paymentModal').style.display = 'none';
+    document.body.style.overflow = '';
     return;
   }
 
   const payload = { numero, montant, categorie, idForfait, idUser };
-
-  // API URL
   const apiUrl = 'http://192.168.10.8:7071/api/wifi/payment';
 
   submitBtn.disabled = true;
@@ -138,66 +98,192 @@ paymentForm.onsubmit = async function(e) {
   submitBtn.textContent = 'Traitement...';
 
   try {
-    console.log('[payment] payload', payload);
     const res = await fetch(apiUrl, {
       method: 'POST',
-      mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const isJson = res.headers.get('content-type')?.includes('application/json');
-    const data = isJson ? await res.json() : await res.text();
-
-    if (!res.ok) {
-      const msg = (isJson && (data && (data.message || data.error))) ? (data.message || data.error) : (typeof data === 'string' ? data : 'Erreur inconnue');
-      console.error('[payment] response error', { status: res.status, data });
-      // show transient toast for failure
-      showTransientToast('Transaction échouée: ' + msg, 8000);
-      return;
+    if (res.ok) {
+      document.getElementById('paymentModal').style.display = 'none';
+      document.body.style.overflow = '';
+      showTransientToast('Transaction initiée. Vérifiez votre téléphone.', 10000);
+      openAccessWaitingModal(idUser);
+    } else {
+      showTransientToast('Erreur lors de la transaction.', 8000);
     }
-
-    // show transient success toast and replace/hide payment modal
-    try {
-      var modal = document.getElementById('paymentModal');
-      if (modal) {
-        modal.style.display = 'none';
-      }
-    } catch (err) {}
-    try { document.body.style.overflow = ''; } catch (err) {}
-    showTransientToast('Transaction initiée avec succès. Veuillez vérifier votre téléphone pour finaliser le paiement.', 10000);
   } catch (err) {
-    console.error('[payment] network/CORS error', err);
-    showTransientToast('Erreur réseau/CORS. Détail: ' + (err && err.message ? err.message : err), 8000);
+    showTransientToast('Erreur réseau.', 8000);
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = oldText;
   }
 };
 
-// Transient toast/modal helper (creates a small popup that fades after duration)
-function showTransientToast(message, duration) {
-  duration = Number(duration) || 10000;
-  // remove existing
-  var existing = document.getElementById('transientToast');
-  if (existing) {
-    try{ existing.parentNode.removeChild(existing); }catch(e){}
+// --- MODAL D'ATTENTE ET DE VÉRIFICATION ---
+function openAccessWaitingModal(userId){
+  let overlay = document.getElementById('accessWaitingModal');
+  
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'accessWaitingModal';
+    overlay.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:10050;';
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .dot-loader { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 20px 0; }
+      .dot-loader div { width: 12px; height: 12px; background: #0d6efd; border-radius: 50%; animation: pulse-dots 1.4s infinite ease-in-out both; }
+      .dot-loader div:nth-child(1) { animation-delay: -0.32s; }
+      .dot-loader div:nth-child(2) { animation-delay: -0.16s; }
+      @keyframes pulse-dots {
+        0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+        40% { transform: scale(1); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:#fff; width:min(92vw, 500px); border-radius:16px; padding:30px 20px; position:relative; box-shadow:0 15px 35px rgba(0,0,0,0.3); text-align:center;';
+    
+    panel.innerHTML = `
+      <button id="closeAccessWaitingModalBtn" style="position:absolute;top:10px;right:15px;border:none;background:transparent;font-size:28px;cursor:pointer;color:#999;">&times;</button>
+      <h3 id="accessTitle" style="margin-bottom:12px; font-family:sans-serif;">Paiement en cours de validation</h3>
+      
+      <p id="accessWaitText" style="margin:0 0 16px 0;color:#444;line-height:1.5;">
+        Veuillez patienter quelques minutes pour la <strong>génération de vos accès WiFi</strong>, puis cliquez sur VERIFIER.
+      </p>
+      
+      <div class="dot-loader" id="loadingDots">
+        <div></div><div></div><div></div>
+      </div>
+
+      <button id="verifyAccessBtn" style="border:none; background:#0d6efd; color:#fff; padding:12px 25px; border-radius:10px; cursor:pointer; font-weight:700; width:100%; font-size:16px;">
+        VERIFIER
+      </button>
+      <div id="accessResultBox" style="margin-top:20px; text-align:left;"></div>
+    `;
+
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+  } else {
+    overlay.style.display = 'flex';
+    document.getElementById('loadingDots').style.display = 'flex';
+    document.getElementById('verifyAccessBtn').style.display = 'block';
+    document.getElementById('accessTitle').textContent = 'Paiement en cours de validation';
+    document.getElementById('accessWaitText').innerHTML = 'Veuillez patienter quelques minutes pour la <strong>génération de vos accès WiFi</strong>, puis cliquez sur VERIFIER.';
   }
-  var el = document.createElement('div');
-  el.id = 'transientToast';
-  el.className = 'transient-toast';
-  el.innerHTML = '<div class="transient-body">' + message + '</div>';
-  el.addEventListener('click', function(){ fadeOutAndRemove(el); });
-  document.body.appendChild(el);
-  // force reflow then show
-  window.getComputedStyle(el).opacity;
-  el.classList.add('visible');
-  // hide after duration
-  var hideTimer = setTimeout(function(){ fadeOutAndRemove(el); }, duration);
-  function fadeOutAndRemove(node){
-    if(!node) return;
-    node.classList.remove('visible');
-    setTimeout(function(){ try{ if(node.parentNode) node.parentNode.removeChild(node); }catch(e){} }, 600);
-  }
+
+  const verifyBtn = document.getElementById('verifyAccessBtn');
+  const resultBox = document.getElementById('accessResultBox');
+  const dots = document.getElementById('loadingDots');
+  const waitText = document.getElementById('accessWaitText');
+  const title = document.getElementById('accessTitle');
+
+  document.getElementById('closeAccessWaitingModalBtn').onclick = () => {
+    overlay.style.display = 'none';
+    showAccessInfoModal(); 
+  };
+
+  verifyBtn.onclick = async function(){
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Vérification...';
+    
+    try {
+      const access = await fetchLatestAccessFromBackend(userId);
+      if(access) {
+        if(dots) dots.style.display = 'none';      
+        if(verifyBtn) verifyBtn.style.display = 'none'; 
+        
+        title.textContent = 'Accès Disponibles !';
+        waitText.innerHTML = '<strong style="color:#059669;">Voici vos accès. Connectez-vous et profitez !</strong>';
+        
+        resultBox.innerHTML = `
+          <div style="background:#f0fdf4; border:2px solid #bcf0da; padding:15px; border-radius:10px; color:#166534;">
+            ${access.login ? `<div style="margin-bottom:5px;"><strong>Identifiant :</strong> ${escapeHtml(access.login)}</div>` : ''}
+            ${access.password ? `<div><strong>Mot de passe :</strong> ${escapeHtml(access.password)}</div>` : ''}
+          </div>
+          <button id="finalFinishBtn" style="margin-top:15px; width:100%; padding:12px; border-radius:10px; border:none; background:#0d6efd; color:#fff; cursor:pointer; font-weight:600;">TERMINER</button>
+        `;
+
+        document.getElementById('finalFinishBtn').onclick = () => {
+          overlay.style.display = 'none';
+          showAccessInfoModal();
+        };
+
+      } else {
+        resultBox.innerHTML = `<div style="background:#fff8e6; border:1px solid #f1d07a; padding:12px; border-radius:10px; color:#7a5a00; font-size:14px;">Vos accès ne sont pas encore prêts. Réessayez dans un instant.</div>`;
+      }
+    } catch(err) {
+      resultBox.innerHTML = `<div style="background:#fff1f2; border:1px solid #fecdd3; padding:12px; border-radius:10px; color:#9f1239;">Erreur réseau. Réessayez.</div>`;
+    } finally {
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = 'VERIFIER';
+    }
+  };
 }
 
+// --- LE DERNIER MODAL (RAPPEL NOTIFICATIONS) ---
+function showAccessInfoModal(){
+  let infoOverlay = document.getElementById('accessInfoModal');
+  if(!infoOverlay){
+    infoOverlay = document.createElement('div');
+    infoOverlay.id = 'accessInfoModal';
+    infoOverlay.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:10060;';
+
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:#fff; width:min(90vw, 400px); border-radius:12px; padding:25px; box-shadow:0 10px 30px rgba(0,0,0,0.3); text-align:center;';
+    
+    panel.innerHTML = `
+      <p style="margin:0 0 20px 0; font-size:16px; color:#333; line-height:1.4;">
+        Vous pouvez retrouver vos accès à tout moment dans la page <strong>Notifications</strong> de votre compte.
+      </p>
+      <button id="closeAccessInfoModalBtn" type="button" style="border:none; background:#0d6efd; color:#fff; padding:10px 25px; border-radius:8px; cursor:pointer; font-weight:600; width:100%;">D'ACCORD</button>
+    `;
+
+    infoOverlay.appendChild(panel);
+    document.body.appendChild(infoOverlay);
+  } else {
+    infoOverlay.style.display = 'flex';
+  }
+
+  document.getElementById('closeAccessInfoModalBtn').onclick = function(){
+    infoOverlay.style.display = 'none';
+  };
+}
+
+// Helpers techniques
+async function fetchLatestAccessFromBackend(userId){
+  const url = NOTIFICATIONS_API_BASE + '/' + encodeURIComponent(userId);
+  const res = await fetch(url);
+  if(!res.ok) return null;
+  const data = await res.json();
+  const arr = Array.isArray(data.dataNotifications) ? data.dataNotifications : [];
+  if(arr.length === 0) return null;
+  
+  const lastNotif = arr[arr.length - 1];
+  return extractAccessFromNotification(lastNotif);
+}
+
+function extractAccessFromNotification(notification){
+  const msg = notification.message || '';
+  const loginMatch = msg.match(/(?:identifiant|login|username)\s*[:\-]\s*([^\s,;]+)/i);
+  const passMatch = msg.match(/(?:mot\s*de\s*passe|password|pass)\s*[:\-]\s*([^\s,;]+)/i);
+  if(loginMatch || passMatch) {
+    return { login: loginMatch ? loginMatch[1] : null, password: passMatch ? passMatch[1] : null };
+  }
+  return null;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showTransientToast(message, duration) {
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:12px 20px; border-radius:8px; z-index:11000; font-size:14px; text-align:center;';
+  el.textContent = message;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), duration || 5000);
+}

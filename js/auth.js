@@ -77,13 +77,34 @@
     dropdown.style.zIndex = '9999';
 
     const dash = document.createElement('a');
-    dash.href = 'dashboard.html';
-    dash.textContent = 'Dashboard';
-    dash.style.display = 'block';
-    dash.style.padding = '8px 12px';
-    dash.style.color = '#222';
-    dash.style.textDecoration = 'none';
-    dash.addEventListener('click', (e)=>{ e.preventDefault(); window.location.href = 'dashboard.html'; });
+dash.href = '#';
+dash.textContent = 'Dashboard';
+dash.style.display = 'block';
+dash.style.padding = '8px 12px';
+dash.style.color = '#222';
+dash.style.textDecoration = 'none';
+
+dash.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const { user } = getAuth();
+
+  let target = 'dashboardp.html'; // par défaut (particulier)
+
+  const role = user?.role || user?.roles;
+
+  if (Array.isArray(role)) {
+    if (role.includes('agent') || role.includes('admin')) {
+      target = 'dashboard.html';
+    }
+  } else if (typeof role === 'string') {
+    if (role === 'agent' || role === 'admin') {
+      target = 'dashboard.html';
+    }
+  }
+
+  window.location.href = target;
+});
 
     const logout = document.createElement('a');
     logout.href = '#';

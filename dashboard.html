@@ -28,6 +28,27 @@
   <link rel="stylesheet" href="css/topbar.css">
 
   <!-- ✅ TABLE FIX: prevent text truncation with ... on small screens -->
+
+  <!-- ── ACCESS GUARD: run before page renders ── -->
+  <script>
+  (function(){
+    var token, user;
+    try{ token = localStorage.getItem('authToken'); }catch(e){}
+    try{ var u = localStorage.getItem('authUser'); user = u ? JSON.parse(u) : null; }catch(e){}
+    // Not authenticated → back to home
+    if(!token && !user){ window.location.replace('index.html'); return; }
+    // Particulier (no agent/admin role) → redirect to particulier dashboard
+    try{
+      var raw = localStorage.getItem('roles');
+      var roles = raw ? JSON.parse(raw) : [];
+      var arr = Array.isArray(roles) ? roles : [roles];
+      arr = arr.map(function(r){ return String(r||'').toLowerCase(); });
+      var hasPriv = arr.indexOf('agent') !== -1 || arr.indexOf('admin') !== -1;
+      var hasPart = arr.indexOf('particulier') !== -1;
+      if(hasPart && !hasPriv){ window.location.replace('dashboardp.html'); }
+    }catch(e){}
+  })();
+  </script>
 </head>
 <body>
 
@@ -488,7 +509,7 @@
       const origText = generateBtn.textContent;
       generateBtn.textContent = 'Génération…';
 
-      const apiUrl = 'http://192.168.10.8:7071/api/wifi/generate-ticket/';
+      const apiUrl = 'http://185.213.27.226:7071/api/wifi/generate-ticket/';
 
       let idUser = null;
       try{
@@ -550,63 +571,6 @@
 })();
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  try{
-    const raw = localStorage.getItem('roles');
-    if(!raw) return;
-    let roles = null;
-    try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
-    const normalize = function(v){ return String(v || '').trim().toLowerCase(); };
-    let roleList = [];
-    if (Array.isArray(roles)) {
-      roleList = roles.map(normalize).filter(Boolean);
-    } else if (typeof roles === 'string') {
-      roleList = roles.split(/[,\s;|]+/).map(normalize).filter(Boolean);
-    } else if (roles && typeof roles === 'object') {
-      roleList = [normalize(roles.role || roles.name || roles.code)];
-    }
-
-    const hasPart = roleList.includes('particulier');
-    const hasPrivileged = roleList.includes('agent') || roleList.includes('admin') || roleList.includes('entreprise') || roleList.includes('famille');
-
-    // Restrict only "particulier-only" users. If agent/admin is present, keep dashboard access.
-    if (hasPart && !hasPrivileged) {
-      const stats = document.getElementById('dashboardStats');
-      const content = document.getElementById('dashboardContent');
-      if (stats) stats.style.display = 'none';
-      if (content) content.style.display = 'none';
-
-      try{
-        const nav = document.querySelector('.sidebar-nav');
-        if(nav){
-          const anchors = Array.from(nav.querySelectorAll('a'));
-          anchors.forEach(a=>{
-            const keep = a.getAttribute('href') === 'notifications.html' || a.getAttribute('href') === 'changepassword.html' || a.getAttribute('href') === 'index.html';
-            a.style.display = keep ? 'block' : 'none';
-          });
-        }
-      }catch(e){}
-
-      const main = document.querySelector('main');
-      if (main) {
-        const card = document.createElement('div');
-        card.className = 'restricted-card';
-        card.innerHTML = '\n          <div class="restricted-inner">\n            <div class="restricted-icon">🔒</div>\n            <div class="restricted-body">\n              <h2>Accès restreint</h2>\n              <p>Votre compte est de type <strong>Particulier</strong>. Seuls les éléments suivants sont disponibles :</p>\n              <ul>\n                <li><a href="notifications.html">Notifications</a></li>\n                <li><a href="changepassword.html">Changer le mot de passe</a></li>\n              </ul>\n            </div>\n          </div>\n        ';
-
-        try{
-          if(!document.getElementById('restricted-card-style')){
-            const s = document.createElement('style'); s.id = 'restricted-card-style';
-            s.textContent = '\n              .restricted-card{background:#fff;border-radius:12px;padding:18px;margin:18px 0;box-shadow:0 8px 24px rgba(0,0,0,0.08);max-width:740px;}\n              .restricted-inner{display:flex;gap:14px;align-items:center;}\n              .restricted-icon{font-size:40px;background:linear-gradient(135deg,#eef2ff,#f0f9ff);width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;}\n              .restricted-body h2{margin:0 0 6px 0;font-size:18px;}\n              .restricted-body p{margin:0 0 8px 0;color:#444;}\n              .restricted-body ul{margin:0;padding-left:18px;color:#222;}\n              .restricted-body a{color:#0b62ff;text-decoration:none;}\n            ';
-            document.head.appendChild(s);
-          }
-        }catch(e){}
-
-        main.insertBefore(card, main.firstChild);
-      }
-    }
-  } catch(e) { /* ignore */ }
-});
-</script>
+<!-- Role guard already runs in <head>; no fallback needed here -->
 
 </html>

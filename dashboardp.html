@@ -28,6 +28,27 @@
   <link rel="stylesheet" href="css/topbar.css">
 
   <!-- ✅ TABLE FIX: prevent text truncation with ... on small screens -->
+
+  <!-- ── ACCESS GUARD: run before page renders ── -->
+  <script>
+  (function(){
+    var token, user;
+    try{ token = localStorage.getItem('authToken'); }catch(e){}
+    try{ var u = localStorage.getItem('authUser'); user = u ? JSON.parse(u) : null; }catch(e){}
+    // Not authenticated at all → back to home
+    if(!token && !user){ window.location.replace('index.html'); return; }
+    // Agent / admin → redirect to the agent dashboard
+    try{
+      var raw = localStorage.getItem('roles');
+      var roles = raw ? JSON.parse(raw) : [];
+      var arr = Array.isArray(roles) ? roles : [roles];
+      arr = arr.map(function(r){ return String(r||'').toLowerCase(); });
+      if(arr.indexOf('agent') !== -1 || arr.indexOf('admin') !== -1){
+        window.location.replace('dashboard.html');
+      }
+    }catch(e){}
+  })();
+  </script>
 </head>
 <body>
 
@@ -48,7 +69,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="active" href="dashboard.html"><span class="nav-icon">🏠</span><span class="nav-text">Forfaits</span></a>
+      <a class="active" href="dashboardp.html"><span class="nav-icon">🏠</span><span class="nav-text">Forfaits</span></a>
       <a href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
       <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
       <a href="messi.html"><span class="nav-icon">💳</span><span class="nav-text">Retour</span></a>

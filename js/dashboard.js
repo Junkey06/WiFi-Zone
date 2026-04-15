@@ -2,7 +2,7 @@
 (function(){
   'use strict';
 
-  const API_BASE = 'http://192.168.10.8:7071/api/wifi/dashboard{idUser}'.replace('{idUser}', '');
+  const API_BASE = 'http://185.213.27.226:7071/api/wifi/dashboard{idUser}'.replace('{idUser}', '');
 
   function formatAmount(n){
     if (n === null || n === undefined) return '0';

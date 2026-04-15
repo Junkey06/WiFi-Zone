@@ -643,28 +643,28 @@
       <div class="stat-card">
         <div class="stat-icon blue"><i class="bi bi-ticket-perforated"></i></div>
         <div class="stat-info">
-          <h4 id="totalTicker">156</h4>
+          <h4 id="totalTicker">—</h4>
           <p>Total Tickets</p>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
         <div class="stat-info">
-          <h4 id="ticketValide">89</h4>
+          <h4 id="ticketValide">—</h4>
           <p>Tickets Valides</p>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon red"><i class="bi bi-x-circle"></i></div>
         <div class="stat-info">
-          <h4 id="ticketExpire">67</h4>
+          <h4 id="ticketExpire">—</h4>
           <p>Tickets Expirés</p>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon purple"><i class="bi bi-cash-stack"></i></div>
         <div class="stat-info">
-          <h4 id="revenuTotal">245,000 Fcfa</h4>
+          <h4 id="revenuTotal">—</h4>
           <p>Revenu Total</p>
         </div>
       </div>
@@ -914,19 +914,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
+  // Unauthenticated → home
+  var token, user;
+  try{ token = localStorage.getItem('authToken'); }catch(e){}
+  try{ var u = localStorage.getItem('authUser'); user = u ? JSON.parse(u) : null; }catch(e){}
+  if(!token && !user){ window.location.replace('index.html'); return; }
+
   try{
     const raw = localStorage.getItem('roles');
     if(!raw) return;
     let roles = null; try{ roles = JSON.parse(raw); } catch(e){ roles = raw; }
-    let hasPart = false;
-    if (Array.isArray(roles)) {
-      hasPart = roles.includes('particulier') || roles.includes('PARTICULIER');
-    } else if (typeof roles === 'string') {
-      hasPart = roles.toLowerCase().indexOf('particulier') !== -1;
-    }
-    if (hasPart) {
-      // redirect particulier users away from transactions page
-      window.location.href = 'dashboard.html';
+    const arr = (Array.isArray(roles) ? roles : [roles]).map(function(r){ return String(r||'').toLowerCase(); });
+    const hasPart = arr.indexOf('particulier') !== -1;
+    const hasPriv  = arr.indexOf('agent') !== -1 || arr.indexOf('admin') !== -1;
+    if(hasPart && !hasPriv){
+      // Particulier users have no access to transactions → send to their dashboard
+      window.location.replace('dashboardp.html');
     }
   } catch(e) { /* ignore */ }
 });

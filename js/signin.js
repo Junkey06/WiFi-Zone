@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     try {
-      const res = await fetch('http://192.168.10.8:7071/api/wifi/login-user', {
+      const res = await fetch('http://185.213.27.226:7071/api/wifi/login-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ numeroWhatsapp: numero.trim(), password: password })

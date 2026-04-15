@@ -7,7 +7,7 @@
   const submitBtn = document.getElementById('signupSubmit');
   const signupModal = document.getElementById('signupModal');
   const signupInner = signupModal ? signupModal.querySelector('.signup-modal') : null;
-  const API_URL = 'http://192.168.10.8:7071/api/wifi/create-user';
+  const API_URL = 'http://185.213.27.226:7071/api/wifi/create-user';
 
   function createSuccessOverlay(text){
     const overlay = document.createElement('div');
@@ -150,6 +150,12 @@
             }
             try{ if(createdUser) localStorage.setItem('authUser', JSON.stringify(createdUser)); }catch(e){}
             try{ if(typeof window.setAuth === 'function') window.setAuth(respData.token, createdUser || { nom }); }catch(e){}
+            // Store roles from signup response
+            try{
+              var signupRawRole = respData.role || respData.roles || (respData.user && (respData.user.role || respData.user.roles)) || null;
+              var signupRoles = signupRawRole ? (Array.isArray(signupRawRole) ? signupRawRole : [signupRawRole]).filter(function(r){ return typeof r === 'string'; }).map(function(r){ return r.trim().toLowerCase(); }) : [];
+              localStorage.setItem('roles', JSON.stringify(signupRoles));
+            }catch(e){}
             if(isNjohFlow){ try{ localStorage.setItem('njoh_clicks','2'); }catch(e){} try{ localStorage.removeItem('njoh_flow'); }catch(e){} }
 
             // ✅ Redirection directe
@@ -158,7 +164,7 @@
           } else {
             // Pas de token : tentative de login automatique
             try{
-              const loginRes = await fetch('http://192.168.10.8:7071/api/wifi/login-user', {
+              const loginRes = await fetch('http://185.213.27.226:7071/api/wifi/login-user', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ numeroWhatsapp, password, type: typeVal })
               });
@@ -184,6 +190,12 @@
                 if(loginUser){
                   try{ localStorage.setItem('authUser', JSON.stringify(loginUser)); }catch(e){}
                   try{ if(typeof window.setAuth === 'function') window.setAuth(loginData && loginData.token ? loginData.token : null, loginUser); }catch(e){}
+                  // Store roles from auto-login response
+                  try{
+                    var autoRawRole = loginData.role || loginData.roles || (loginData.user && (loginData.user.role || loginData.user.roles)) || null;
+                    var autoRoles = autoRawRole ? (Array.isArray(autoRawRole) ? autoRawRole : [autoRawRole]).filter(function(r){ return typeof r === 'string'; }).map(function(r){ return r.trim().toLowerCase(); }) : [];
+                    localStorage.setItem('roles', JSON.stringify(autoRoles));
+                  }catch(e){}
                   if(isNjohFlow){ try{ localStorage.setItem('njoh_clicks','2'); }catch(e){} try{ localStorage.removeItem('njoh_flow'); }catch(e){} }
                 }
               }

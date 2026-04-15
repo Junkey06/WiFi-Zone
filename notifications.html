@@ -66,37 +66,38 @@
 </head>
 <body>
 
-  <div class="dashboard">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <span class="sidebar-logo">📊 Agent</span>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-logo">📊 Agent</span>
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        <span class="toggle-bar"></span><span class="toggle-bar"></span><span class="toggle-bar"></span>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" id="nav-dashboard"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
+      <a href="transactions.html" data-nav="transactions"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
+      <a class="active" href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
+      <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
+      <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Acceuille</span></a>
+    </nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  
+  <main class="main">
+    <header class="topbar">
+      <button id="mobileMenuToggle" class="mobile-menu-btn">
+        <span></span><span></span><span></span>
+      </button>
+      <h1>Notifications</h1>
+      <div class="user" id="topbarUser">
+        <button>
+            <span id="userNameDisplay">John Doe</span> 
+            <i class="fa fa-user" aria-hidden="true"></i>
+        </button>
       </div>
-
-      <nav class="sidebar-nav">
-        <a href="#" id="dashboardLink"><span class="nav-icon">🏠</span><span class="nav-text">Dashboard</span></a>
-        <a href="transactions.html" data-nav="transactions"><span class="nav-icon">📊</span><span class="nav-text">Transactions</span></a>
-        <a class="active" href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
-        <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
-        <a href="index.html"><span class="nav-icon">💳</span><span class="nav-text">Accueil</span></a>
-      </nav>
-    </aside>
-
-    <main class="main">
-      <header class="topbar">
-        <button id="mobileMenuToggle" class="mobile-menu-btn"><span></span><span></span><span></span></button>
-        <h1>Notifications</h1>
-        <div class="user">
-          <div class="user-dropdown">
-            <button id="userBtn">
-              <span id="userNameDisplay">Mon Compte</span> 
-              <i class="fa fa-user"></i>
-            </button>
-            <div class="dropdown-menu" id="dropdownMenu">
-              <a href="#" id="logoutBtn"><i class="fa fa-sign-out"></i> Déconnexion</a>
-            </div>
-          </div>
-        </div>
-      </header>
+    </header>
 
       <div class="pages-header">
         <h2><i class="bi bi-receipt-cutoff"></i> Historique des Notifications</h2>

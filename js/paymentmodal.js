@@ -27,7 +27,7 @@ window.onclick = function(event) {
 // Configuration Cameroun
 const MTN_PREFIXES = ['670','671','672','673','674','675','676','677','678','679','683','682'];
 const ORANGE_PREFIXES = ['690','691','692','693','694','695','696','697','698','699','655','640','659'];
-const NOTIFICATIONS_API_BASE = 'http://185.213.27.226:7071/api/wifi/notifications';
+const NOTIFICATIONS_API_BASE = 'http://192.168.10.8:7071/api/wifi/notifications';
 
 function getOperatorTypeFromNumber(num) {
   const value = (num || '').trim();
@@ -91,7 +91,7 @@ paymentForm.onsubmit = async function(e) {
   }
 
   const payload = { numero, montant, categorie, idForfait, idUser };
-  const apiUrl = 'http://185.213.27.226:7071/api/wifi/payment';
+  const apiUrl = 'http://192.168.10.8:7071/api/wifi/payment';
 
   submitBtn.disabled = true;
   const oldText = submitBtn.textContent;

@@ -171,3 +171,31 @@ dash.addEventListener('click', (e) => {
     renderAuth();
   }
 })();
+
+/* ── Dynamic sidebar role label ───────────────────────────────────────────────
+   Reads roles from localStorage and updates #sidebarRoleLabel on every page.
+   Priority: agent/admin > particulier > first role found > 'Utilisateur'
+──────────────────────────────────────────────────────────────────────────── */
+(function(){
+  function renderSidebarRole(){
+    var el = document.getElementById('sidebarRoleLabel');
+    if(!el) return;
+    var raw = localStorage.getItem('roles');
+    var arr = [];
+    try{ var parsed = raw ? JSON.parse(raw) : []; arr = (Array.isArray(parsed) ? parsed : [parsed]).map(function(r){ return String(r||'').trim().toLowerCase(); }); }catch(e){}
+    var label;
+    if(arr.indexOf('agent') !== -1 || arr.indexOf('admin') !== -1) label = 'Agent';
+    else if(arr.indexOf('particulier') !== -1)                      label = 'Particulier';
+    else if(arr.length && arr[0])                                    label = arr[0].charAt(0).toUpperCase() + arr[0].slice(1);
+    else                                                             label = 'Utilisateur';
+    el.textContent = '📊 ' + label;
+  }
+
+  window.renderSidebarRole = renderSidebarRole;
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', renderSidebarRole);
+  } else {
+    renderSidebarRole();
+  }
+})();

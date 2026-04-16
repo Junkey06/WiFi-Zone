@@ -55,7 +55,7 @@
         
         const isParticulier = rolesArray.includes('particulier');
 
-        if (isParticulier && !rolesArray.includes('admin')) {
+        if (isParticulier && !rolesArray.includes('admin') && !rolesArray.includes('agent')) {
           const style = document.createElement('style');
           style.innerHTML = '[data-nav="transactions"] { display: none !important; }';
           document.head.appendChild(style);
@@ -68,7 +68,7 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <span class="sidebar-logo">📊 Agent</span>
+      <span class="sidebar-logo" id="sidebarRoleLabel">📊 Agent</span>
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
         <span class="toggle-bar"></span><span class="toggle-bar"></span><span class="toggle-bar"></span>
       </button>
@@ -151,7 +151,7 @@
           const roles = JSON.parse(rawRoles);
           const rolesArray = Array.isArray(roles) ? roles.map(r => r.toLowerCase()) : [roles.toLowerCase()];
           
-          if (rolesArray.includes('particulier') && !rolesArray.includes('admin')) {
+          if (rolesArray.includes('particulier') && !rolesArray.includes('admin') && !rolesArray.includes('agent')) {
             dashLink.href = 'dashboardp.html';
           } else {
             dashLink.href = 'dashboard.html';

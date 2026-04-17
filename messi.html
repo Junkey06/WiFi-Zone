@@ -281,6 +281,106 @@
         </div>
         <!-- Payment Modal End -->
 
+        <!-- Auth Required Modal Start -->
+        <div id="authRequiredModal" class="auth-required-overlay" style="display:none;" aria-hidden="true">
+          <div class="auth-required-box" role="dialog" aria-modal="true" aria-labelledby="authRequiredTitle">
+            <button id="closeAuthRequiredBtn" class="auth-required-close" aria-label="Fermer">&times;</button>
+            <div class="auth-required-icon"><i class="fa fa-lock" aria-hidden="true"></i></div>
+            <h3 id="authRequiredTitle">Connexion requise</h3>
+            <p>
+              Pour acheter une offre, vous devez d'abord vous connecter ou créer un compte.
+            </p>
+            <div class="auth-required-actions">
+              <button id="authRequiredSignin" type="button" class="btn btn-primary">Se connecter</button>
+              <button id="authRequiredSignup" type="button" class="btn btn-outline-primary">Créer un compte</button>
+            </div>
+            <button id="authRequiredLater" type="button" class="auth-required-later">Plus tard</button>
+          </div>
+        </div>
+        <!-- Auth Required Modal End -->
+
+        <style>
+          .auth-required-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 10, 24, 0.62);
+            backdrop-filter: blur(3px);
+            z-index: 10080;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+          }
+          .auth-required-box {
+            position: relative;
+            width: min(92vw, 430px);
+            border-radius: 18px;
+            background: linear-gradient(165deg, #ffffff 0%, #f1f7ff 100%);
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.30);
+            padding: 26px 22px 20px;
+            text-align: center;
+            animation: authRequiredIn .22s ease-out;
+          }
+          .auth-required-close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            border: none;
+            background: transparent;
+            font-size: 1.7rem;
+            line-height: 1;
+            color: #64748b;
+            cursor: pointer;
+          }
+          .auth-required-icon {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 1.35rem;
+            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
+          }
+          .auth-required-box h3 {
+            margin: 0 0 8px;
+            font-size: 1.3rem;
+            color: #0f172a;
+            font-weight: 800;
+          }
+          .auth-required-box p {
+            margin: 0;
+            color: #334155;
+            line-height: 1.55;
+          }
+          .auth-required-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 18px;
+          }
+          .auth-required-actions .btn {
+            width: 100%;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 10px 12px;
+          }
+          .auth-required-later {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            margin-top: 10px;
+            font-weight: 600;
+            cursor: pointer;
+          }
+          @keyframes authRequiredIn {
+            from { transform: translateY(10px) scale(0.98); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+          }
+        </style>
+
          <!-- Waiting Modal Start
 
         <div id="paymentModal" class="modal" style="display:none;">

@@ -281,13 +281,127 @@
         </div>
         <!-- Payment Modal End -->
 
+        <!-- Auth Required Modal Start -->
+        <div id="authRequiredModal" class="auth-required-overlay" style="display:none;" aria-hidden="true">
+          <div class="auth-required-box" role="dialog" aria-modal="true" aria-labelledby="authRequiredTitle">
+            <button id="closeAuthRequiredBtn" class="auth-required-close" aria-label="Fermer">&times;</button>
+            <div class="auth-required-icon"><i class="fa fa-lock" aria-hidden="true"></i></div>
+            <h3 id="authRequiredTitle">Connexion requise</h3>
+            <p>
+              Pour acheter une offre, vous devez d'abord vous connecter ou créer un compte.
+            </p>
+            <div class="auth-required-actions">
+              <button id="authRequiredSignin" type="button" class="btn btn-primary">Se connecter</button>
+              <button id="authRequiredSignup" type="button" class="btn btn-outline-primary">Créer un compte</button>
+            </div>
+            <button id="authRequiredLater" type="button" class="auth-required-later">Plus tard</button>
+          </div>
+        </div>
+        <!-- Auth Required Modal End -->
+
+        <style>
+          .auth-required-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 10, 24, 0.62);
+            backdrop-filter: blur(3px);
+            z-index: 10080;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+          }
+          .auth-required-box {
+            position: relative;
+            width: min(92vw, 430px);
+            border-radius: 18px;
+            background: linear-gradient(165deg, #ffffff 0%, #f1f7ff 100%);
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.30);
+            padding: 26px 22px 20px;
+            text-align: center;
+            animation: authRequiredIn .22s ease-out;
+          }
+          .auth-required-close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            border: none;
+            background: transparent;
+            font-size: 1.7rem;
+            line-height: 1;
+            color: #64748b;
+            cursor: pointer;
+          }
+          .auth-required-icon {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 1.35rem;
+            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
+          }
+          .auth-required-box h3 {
+            margin: 0 0 8px;
+            font-size: 1.3rem;
+            color: #0f172a;
+            font-weight: 800;
+          }
+          .auth-required-box p {
+            margin: 0;
+            color: #334155;
+            line-height: 1.55;
+          }
+          .auth-required-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 18px;
+          }
+          .auth-required-actions .btn {
+            width: 100%;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 10px 12px;
+          }
+          .auth-required-later {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            margin-top: 10px;
+            font-weight: 600;
+            cursor: pointer;
+          }
+          @keyframes authRequiredIn {
+            from { transform: translateY(10px) scale(0.98); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+          }
+        </style>
+
+         <!-- Waiting Modal Start
+
+        <div id="paymentModal" class="modal" style="display:none;">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <button id="closeModalBtn">&times;</button>
+              <h1 class="text-center mb-4">Patientez</h1>
+              <h5 class="text-center">Vous recevrez les acces pour profiter de votre connexion dans un instant</h5>
+              <button type="submit" class="btn btn-primary w-100">Consulter</button>
+            </div>
+          </div>
+        </div>   -->
+        <!-- Waiting Modal End -->
+
         <!-- Topbar Start -->
         <div class="container-fluid bg-dark py-2 d-none d-md-flex">
             <div class="container">
                 <div class="d-flex justify-content-between topbar">
                     <div class="top-info">
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>23 Ranking Street, New York</small>
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>Email@Example.com</small>
+                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>Rue Foe, Dépôt de gaz Essos, Yaoundé </small>
+                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>infos@ecolab-hightech.com</small>
                     </div>
                     <div id="note" class="text-secondary d-none d-xl-flex"><small>Note : We help you to Grow your Business</small></div>
                     <div class="top-link">
@@ -517,7 +631,7 @@ $(endif)
               </tr>
             </thead>
             <tbody>
-              <tr class="offer-row" data-idforfait="1" data-categorie="particulier" data-title="Express 1h" data-price="100 Fcfa" data-duration="1 heure" data-data="2 GB" data-description="Idéal pour les réseaux sociaux, WhatsApp et navigation rapide." data-slogan="Surf léger" data-speed="5">
+              <tr class="offer-row" data-idforfait="1" data-categorie="particulier" data-title="Surf léger" data-price="100 Fcfa" data-duration="24h" data-data="1 Go" data-description="Idéal pour les réseaux sociaux, WhatsApp et navigation rapide." data-slogan="Surf léger" data-speed="5">
                 <td>Surf léger</td>
                 <td>100 Fcfa</td>
                 <td>1 Go</td>
@@ -525,7 +639,7 @@ $(endif)
                 <td>24h</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="2" data-categorie="particulier" data-title="Express 2h" data-price="250 Fcfa" data-duration="2 heures" data-data="Illimité*" data-description="Streaming musique, réseaux sociaux. 2h de liberté digitale !" data-slogan="Streaming audio" data-speed="10">
+              <tr class="offer-row" data-idforfait="2" data-categorie="particulier" data-title="Streaming audio" data-price="250 Fcfa" data-duration="2j" data-data="3 Go" data-description="Streaming musique, réseaux sociaux. 2h de liberté digitale !" data-slogan="Streaming audio" data-speed="12">
                 <td>Streaming audio</td>
                 <td>250 Fcfa</td>
                 <td>3 Go</td>
@@ -533,7 +647,7 @@ $(endif)
                 <td>2j</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="3" data-categorie="particulier" data-title="Express 3h" data-price="500 Fcfa" data-duration="3 heures" data-data="Illimité" data-description="YouTube, téléchargements légers. L'after-work connecté !" data-slogan="Surf &amp; vidéo" data-speed="20">
+              <tr class="offer-row" data-idforfait="3" data-categorie="particulier" data-title="Surf &amp; vidéo" data-price="500 Fcfa" data-duration="4j" data-data="6 Go" data-description="YouTube, téléchargements légers. L'after-work connecté !" data-slogan="Surf &amp; vidéo" data-speed="15">
                 <td>Surf &amp; vidéo</td>
                 <td>500 Fcfa</td>
                 <td>6 Go</td>
@@ -541,7 +655,7 @@ $(endif)
                 <td>4j</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="4" data-categorie="particulier" data-title="Express 5h" data-price="1000 Fcfa" data-duration="5 heures" data-data="Illimité" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
+              <tr class="offer-row" data-idforfait="4" data-categorie="particulier" data-title="Journée connectée" data-price="1000 Fcfa" data-duration="7j" data-data="15 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="18">
                 <td>Journée connectée</td>
                 <td>1000 Fcfa</td>
                 <td>15 Go</td>
@@ -549,7 +663,7 @@ $(endif)
                 <td>7j</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="5" data-categorie="particulier" data-title="Express 5h" data-price="3000 Fcfa" data-duration="5 heures" data-data="Illimité" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
+              <tr class="offer-row" data-idforfait="5" data-categorie="particulier" data-title="Journée connectée" data-price="3000 Fcfa" data-duration="30j" data-data="30 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="20">
                 <td>Journée connectée</td>
                 <td>3000 Fcfa</td>
                 <td>30 Go</td>
@@ -557,7 +671,7 @@ $(endif)
                 <td>30j</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="6" data-categorie="particulier" data-title="Express 5h" data-price="5000 Fcfa" data-duration="5 heures" data-data="Illimité" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
+              <tr class="offer-row" data-idforfait="6" data-categorie="particulier" data-title="Journée connectée" data-price="5000 Fcfa" data-duration="30j" data-data="45 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
                 <td>Journée connectée</td>
                 <td>5000 Fcfa</td>
                 <td>45 Go</td>
@@ -589,7 +703,7 @@ $(endif)
               </tr>
             </thead>
             <tbody>
-              <tr class="offer-row" data-idforfait="7" data-categorie="particulier" data-title="Journalière 10GB" data-price="500 Fcfa" data-duration="24 heures" data-data="10 GB" data-description="TikTok, YouTube, Netflix. Votre pass journée illimitée !" data-slogan="Journée Média" data-speed="25">
+              <tr class="offer-row" data-idforfait="7" data-categorie="particulier" data-title="Journée Média" data-price="500 Fcfa" data-duration="24h" data-data="Illimité" data-description="TikTok, YouTube, Netflix. Votre pass journée illimitée !" data-slogan="Journée Média" data-speed="2">
                 <td>Journée Média</td>
                 <td>500 Fcfa</td>
                 <td>Illimité</td>
@@ -597,7 +711,7 @@ $(endif)
                 <td>24h</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="8" data-categorie="particulier" data-title="Journalière Illimité" data-price="1000 Fcfa" data-duration="24 heures" data-data="Illimité" data-description="4K Streaming, gaming online. 24h de folie numérique !" data-slogan="Illimité" data-speed="50">
+              <tr class="offer-row" data-idforfait="8" data-categorie="particulier" data-title="Illimité" data-price="1000 Fcfa" data-duration="24h" data-data="Illimité" data-description="4K Streaming, gaming online. 24h de folie numérique !" data-slogan="Illimité" data-speed="4">
                 <td>Illimité</td>
                 <td>1000 Fcfa</td>
                 <td>Illimité</td>
@@ -605,7 +719,7 @@ $(endif)
                 <td>24h</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="9" data-categorie="particulier" data-title="Journalière Illimité HD" data-price="3000 Fcfa" data-duration="24 heures" data-data="Illimité HD" data-description="Ultra HD, téléchargements rapides. Le premium à petit prix" data-slogan="Ultra HD" data-speed="75">
+              <tr class="offer-row" data-idforfait="9" data-categorie="particulier" data-title="Ultra HD" data-price="3000 Fcfa" data-duration="7j" data-data="Illimité" data-description="Ultra HD, téléchargements rapides. Le premium à petit prix" data-slogan="Ultra HD" data-speed="3">
                 <td>Ultra HD</td>
                 <td>3000 Fcfa</td>
                 <td>Illimité</td>
@@ -613,7 +727,7 @@ $(endif)
                 <td>7j</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="10" data-categorie="particulier" data-title="Journalière Illimité HD" data-price="4000 Fcfa" data-duration="24 heures" data-data="Illimité HD" data-description="Ultra HD, téléchargements rapides. Le premium à petit prix" data-slogan="Ultra HD" data-speed="75">
+              <tr class="offer-row" data-idforfait="10" data-categorie="particulier" data-title="Ultra HD" data-price="4000 Fcfa" data-duration="15j" data-data="Illimité" data-description="Ultra HD, téléchargements rapides. Le premium à petit prix" data-slogan="Ultra HD" data-speed="3">
                 <td>Ultra HD</td>
                 <td>4000 Fcfa</td>
                 <td>Illimité</td>
@@ -708,7 +822,7 @@ $(endif)
               </tr>
             </thead>
             <tbody>
-              <tr class="offer-row" data-idforfait="11" data-categorie="particulier" data-title="Hebdomadaire 50GB" data-price="7000 Fcfa" data-duration="7 jours" data-data="50 GB" data-description="Binge watching, gaming. Une semaine de connexion assurée" data-slogan="Semaine Média" data-speed="50">
+              <tr class="offer-row" data-idforfait="11" data-categorie="particulier" data-title="Semaine Média" data-price="7000 Fcfa" data-duration="1 Mois" data-data="Illimité" data-description="Binge watching, gaming. Une semaine de connexion assurée" data-slogan="Semaine Média" data-speed="3">
                 <td>Semaine Média</td>
                 <td>7000 Fcfa</td>
                 <td>Illimité</td>
@@ -716,7 +830,7 @@ $(endif)
                 <td>1 Mois</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="12" data-categorie="particulier" data-title="Hebdomadaire Illimité" data-price="10000 Fcfa" data-duration="7 jours" data-data="Illimité" data-description="Famille, partage, divertissement. Votre semaine 100% connectée" data-slogan="Famille Illimitée" data-speed="100">
+              <tr class="offer-row" data-idforfait="12" data-categorie="particulier" data-title="Famille Illimitée" data-price="10000 Fcfa" data-duration="1 Mois" data-data="Illimité" data-description="Famille, partage, divertissement. Votre semaine 100% connectée" data-slogan="Famille Illimitée" data-speed="3">
                 <td>Famille Illimitée</td>
                 <td>10000 Fcfa</td>
                 <td>Illimité</td>
@@ -724,7 +838,7 @@ $(endif)
                 <td>1 Mois</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="13" data-categorie="particulier" data-title="Hebdomadaire Illimité HD+" data-price="15000 Fcfa" data-duration="7 jours" data-data="Illimité HD+" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="200">
+              <tr class="offer-row" data-idforfait="13" data-categorie="particulier" data-title="Pro HD+" data-price="15000 Fcfa" data-duration="2 Mois" data-data="Illimité" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="3">
                 <td>Pro HD+</td>
                 <td>15000 Fcfa</td>
                 <td>Illimité</td>
@@ -732,7 +846,7 @@ $(endif)
                 <td>2 Mois</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="14" data-categorie="particulier" data-title="Hebdomadaire Illimité HD+" data-price="20000 Fcfa" data-duration="7 jours" data-data="Illimité HD+" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="200">
+              <tr class="offer-row" data-idforfait="14" data-categorie="particulier" data-title="Pro HD+" data-price="20000 Fcfa" data-duration="3 Mois" data-data="Illimité" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="3">
                 <td>Pro HD+</td>
                 <td>20000 Fcfa</td>
                 <td>Illimité</td>
@@ -740,7 +854,7 @@ $(endif)
                 <td>3 Mois</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="15" data-categorie="particulier" data-title="Hebdomadaire Illimité HD+" data-price="30000 Fcfa" data-duration="7 jours" data-data="Illimité HD+" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="200">
+              <tr class="offer-row" data-idforfait="15" data-categorie="particulier" data-title="Pro HD+" data-price="30000 Fcfa" data-duration="3 Mois" data-data="Illimité" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="3">
                 <td>Pro HD+</td>
                 <td>30000 Fcfa</td>
                 <td>Illimité</td>
@@ -768,7 +882,7 @@ $(endif)
               </tr>
             </thead>
             <tbody>
-              <tr class="offer-row" data-idforfait="16" data-categorie="particulier" data-title="Hebdomadaire 50GB" data-price="100000 Fcfa" data-duration="7 jours" data-data="50 GB" data-description="Binge watching, gaming. Une semaine de connexion assurée" data-slogan="Semaine Média" data-speed="50">
+              <tr class="offer-row" data-idforfait="16" data-categorie="particulier" data-title="Semaine Média" data-price="100000 Fcfa" data-duration="12 Mois" data-data="Illimité" data-description="Binge watching, gaming. Une semaine de connexion assurée" data-slogan="Semaine Média" data-speed="10">
                 <td>Semaine Média</td>
                 <td>100000 Fcfa</td>
                 <td>Illimité</td>
@@ -842,21 +956,21 @@ $(endif)
 
             <div class="contact-item">
                 <i class="fas fa-map-marker-alt"></i>
-                <a href="#"><p>123 Street, New York, USA</p></a>
+                <a href="#"><p>Rue Foe, Dépôt de gaz Essos, Yaoundé</p></a>
             </div>
 
             <div class="line"></div>
 
             <div class="contact-item">
                 <i class="fas fa-phone-alt"></i>
-                <a href="tel:+1234567890">+123 456 7890</a>
+                <a href="tel:+1234567890">+237 654 92 93 16</a>
             </div>
 
             <div class="line"></div>
 
             <div class="contact-item">
                 <i class="fas fa-envelope"></i>
-                <a href="mailto:info@example.com">info@example.com</a>
+                <a href="mailto:info@example.com">infos@ecolab-hightech.com</a>
             </div>
         </div>
 

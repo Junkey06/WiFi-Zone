@@ -24,6 +24,65 @@ window.onclick = function(event) {
   }
 };
 
+function showAuthRequiredModal() {
+  const authModal = document.getElementById('authRequiredModal');
+  if (!authModal) {
+    // Fallback for pages that do not include this modal markup.
+    alert('Veuillez vous connecter ou créer un compte pour effectuer un achat.');
+    return;
+  }
+
+  const closeBtn = document.getElementById('closeAuthRequiredBtn');
+  const signInBtn = document.getElementById('authRequiredSignin');
+  const signUpBtn = document.getElementById('authRequiredSignup');
+  const laterBtn = document.getElementById('authRequiredLater');
+
+  const closeAuthModal = function() {
+    authModal.style.display = 'none';
+    authModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  authModal.style.display = 'flex';
+  authModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  if (closeBtn) closeBtn.onclick = closeAuthModal;
+  if (laterBtn) laterBtn.onclick = closeAuthModal;
+
+  authModal.onclick = function(e) {
+    if (e.target === authModal) closeAuthModal();
+  };
+
+  if (!window.__authRequiredEscBound) {
+    document.addEventListener('keydown', function(e) {
+      const current = document.getElementById('authRequiredModal');
+      if (e.key === 'Escape' && current && current.style.display !== 'none') {
+        current.style.display = 'none';
+        current.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+    window.__authRequiredEscBound = true;
+  }
+
+  if (signInBtn) {
+    signInBtn.onclick = function() {
+      closeAuthModal();
+      if (typeof openSignin === 'function') openSignin();
+      else window.location.href = 'login.html';
+    };
+  }
+
+  if (signUpBtn) {
+    signUpBtn.onclick = function() {
+      closeAuthModal();
+      if (typeof openSignup === 'function') openSignup();
+      else window.location.href = 'login.html';
+    };
+  }
+}
+
 // Configuration Cameroun
 const MTN_PREFIXES = ['670','671','672','673','674','675','676','677','678','679','683','682'];
 const ORANGE_PREFIXES = ['690','691','692','693','694','695','696','697','698','699','655','640','659'];
@@ -87,6 +146,7 @@ paymentForm.onsubmit = async function(e) {
   if (!idUser) {
     document.getElementById('paymentModal').style.display = 'none';
     document.body.style.overflow = '';
+    showAuthRequiredModal();
     return;
   }
 

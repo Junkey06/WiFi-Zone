@@ -86,7 +86,7 @@ function showAuthRequiredModal() {
 // Configuration Cameroun
 const MTN_PREFIXES = ['670','671','672','673','674','675','676','677','678','679','683','682'];
 const ORANGE_PREFIXES = ['690','691','692','693','694','695','696','697','698','699','655','640','659'];
-const NOTIFICATIONS_API_BASE = 'http://192.168.10.8:7071/api/wifi/notifications';
+const AVAILABLE_ACCESS_API_BASE = 'http://192.168.10.8:7071/api/wifi/available-access';
 
 function getOperatorTypeFromNumber(num) {
   const value = (num || '').trim();
@@ -95,6 +95,35 @@ function getOperatorTypeFromNumber(num) {
   if (MTN_PREFIXES.includes(prefix)) return 'MTN';
   if (ORANGE_PREFIXES.includes(prefix)) return 'ORANGE';
   return null;
+}
+
+function extractAccessFromAnyPayload(payload) {
+  if (!payload) return null;
+  if (Array.isArray(payload)) {
+    for (let i = payload.length - 1; i >= 0; i--) {
+      const candidate = extractAccessFromAnyPayload(payload[i]);
+      if (candidate) return candidate;
+    }
+    return null;
+  }
+  if (typeof payload !== 'object') return null;
+
+  const login = payload.login || payload.username || payload.user || payload.identifiant || payload.userName || null;
+  const password = payload.password || payload.pass || payload.motDePasse || payload.mdp || null;
+  if (login || password) return { login, password };
+
+  // Try nested containers commonly used by APIs.
+  return extractAccessFromAnyPayload(
+    payload.data || payload.result || payload.access || payload.availableAccess || payload.ticket || null
+  );
+}
+
+async function fetchLatestAvailableAccess(userId) {
+  const url = AVAILABLE_ACCESS_API_BASE + '/' + encodeURIComponent(userId);
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  return extractAccessFromAnyPayload(data);
 }
 
 // Détection opérateur UI
@@ -231,6 +260,7 @@ function openAccessWaitingModal(userId){
     document.getElementById('verifyAccessBtn').style.display = 'block';
     document.getElementById('accessTitle').textContent = 'Paiement en cours de validation';
     document.getElementById('accessWaitText').innerHTML = 'Veuillez patienter quelques minutes pour la <strong>génération de vos accès WiFi</strong>, puis cliquez sur VERIFIER.';
+    document.getElementById('accessResultBox').innerHTML = '';
   }
 
   const verifyBtn = document.getElementById('verifyAccessBtn');
@@ -313,25 +343,11 @@ function showAccessInfoModal(){
 
 // Helpers techniques
 async function fetchLatestAccessFromBackend(userId){
-  const url = NOTIFICATIONS_API_BASE + '/' + encodeURIComponent(userId);
-  const res = await fetch(url);
-  if(!res.ok) return null;
-  const data = await res.json();
-  const arr = Array.isArray(data.dataNotifications) ? data.dataNotifications : [];
-  if(arr.length === 0) return null;
-  
-  const lastNotif = arr[arr.length - 1];
-  return extractAccessFromNotification(lastNotif);
-}
-
-function extractAccessFromNotification(notification){
-  const msg = notification.message || '';
-  const loginMatch = msg.match(/(?:identifiant|login|username)\s*[:\-]\s*([^\s,;]+)/i);
-  const passMatch = msg.match(/(?:mot\s*de\s*passe|password|pass)\s*[:\-]\s*([^\s,;]+)/i);
-  if(loginMatch || passMatch) {
-    return { login: loginMatch ? loginMatch[1] : null, password: passMatch ? passMatch[1] : null };
+  try {
+    return await fetchLatestAvailableAccess(userId);
+  } catch (e) {
+    return null;
   }
-  return null;
 }
 
 function escapeHtml(text) {

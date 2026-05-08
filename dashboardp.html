@@ -55,6 +55,50 @@
 
   
 
+  <!-- MIKROTIK MODAL -->
+  <div id="mikrotikModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9999;justify-content:center;align-items:center;">
+    <div class="modal-dialog offer-details-box" style="max-width:420px;">
+      <div class="offer-details-content">
+        <button class="close-offer-details" aria-label="Fermer" onclick="document.getElementById('mikrotikModal').style.display='none'">&times;</button>
+        <div class="text-center mb-3">
+          <span style="font-size:2.5rem;">🌐</span>
+          <h3 class="mt-2 mb-0">Connexion Mikrotik</h3>
+          <p class="od-subtext">Entrez vos identifiants hotspot</p>
+        </div>
+        $(if chap-id)
+        <form name="mikrotikSendin" action="$(link-login-only)" method="post" style="display:none">
+          <input type="hidden" name="username" />
+          <input type="hidden" name="password" />
+          <input type="hidden" name="dst" value="$(link-orig)" />
+          <input type="hidden" name="popup" value="true" />
+        </form>
+        <script>
+          function doMikrotikLogin() {
+            document.mikrotikSendin.username.value = document.mikrotikLoginForm.username.value;
+            document.mikrotikSendin.password.value = hexMD5('$(chap-id)' +
+              document.mikrotikLoginForm.password.value + '$(chap-challenge)');
+            document.mikrotikSendin.submit();
+            return false;
+          }
+        </script>
+        $(endif)
+        <form name="mikrotikLoginForm" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doMikrotikLogin()" $(endif) style="display:flex;flex-direction:column;gap:0.75rem;">
+          <input type="hidden" name="dst" value="$(link-orig)" />
+          <input type="hidden" name="popup" value="true" />
+          <div>
+            <label style="font-weight:600;display:block;margin-bottom:4px;">Nom d'utilisateur</label>
+            <input name="username" type="text" value="$(username)" placeholder="Username" class="form-control" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #ccc;border-radius:6px;" />
+          </div>
+          <div>
+            <label style="font-weight:600;display:block;margin-bottom:4px;">Mot de passe</label>
+            <input name="password" type="password" placeholder="Password" class="form-control" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #ccc;border-radius:6px;" />
+          </div>
+          <input type="submit" value="Connexion" class="btn btn-primary w-100 mt-2" style="cursor:pointer;" />
+        </form>
+      </div>
+    </div>
+  </div>
+
 <div class="dashboard">
 
   <!-- Sidebar -->
@@ -73,6 +117,7 @@
       <a href="notifications.html"><span class="nav-icon">🔔</span><span class="nav-text">Notifications</span></a>
       <a href="changepassword.html"><span class="nav-icon">⚙️</span><span class="nav-text">Change Password</span></a>
       <a href="messi.html"><span class="nav-icon">💳</span><span class="nav-text">Retour</span></a>
+      <a href="#" id="mikrotikNavBtn" onclick="document.getElementById('mikrotikModal').style.display='flex';return false;"><span class="nav-icon">🌐</span><span class="nav-text">Mikrotik</span></a>
     </nav>
   </aside>
 
@@ -200,50 +245,50 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="offer-row" data-idforfait="1" data-categorie="particulier" data-title="Surf léger" data-price="100 Fcfa" data-duration="24h" data-data="1 Go" data-description="Idéal pour les réseaux sociaux, WhatsApp et navigation rapide." data-slogan="Surf léger" data-speed="5">
+              <tr class="offer-row" data-idforfait="1" data-categorie="particulier" data-title="Surf léger" data-price="100 Fcfa" data-duration="24h" data-data="2 Go" data-description="Idéal pour les réseaux sociaux, WhatsApp et navigation rapide." data-slogan="Surf léger" data-speed="5">
                 <td>Surf léger</td>
                 <td>100 Fcfa</td>
-                <td>1 Go</td>
+                <td>2 Go</td>
                 <td>5 Mbps</td>
                 <td>24h</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="2" data-categorie="particulier" data-title="Streaming audio" data-price="250 Fcfa" data-duration="2j" data-data="3 Go" data-description="Streaming musique, réseaux sociaux. 2h de liberté digitale !" data-slogan="Streaming audio" data-speed="12">
+              <tr class="offer-row" data-idforfait="2" data-categorie="particulier" data-title="Streaming audio" data-price="250 Fcfa" data-duration="2j" data-data="4 Go" data-description="Streaming musique, réseaux sociaux. 2h de liberté digitale !" data-slogan="Streaming audio" data-speed="12">
                 <td>Streaming audio</td>
                 <td>250 Fcfa</td>
-                <td>3 Go</td>
+                <td>4 Go</td>
                 <td>12 Mbps</td>
                 <td>2j</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="3" data-categorie="particulier" data-title="Surf &amp; vidéo" data-price="500 Fcfa" data-duration="4j" data-data="6 Go" data-description="YouTube, téléchargements légers. L'after-work connecté !" data-slogan="Surf &amp; vidéo" data-speed="15">
+              <tr class="offer-row" data-idforfait="3" data-categorie="particulier" data-title="Surf &amp; vidéo" data-price="500 Fcfa" data-duration="4j" data-data="7 Go" data-description="YouTube, téléchargements légers. L'after-work connecté !" data-slogan="Surf &amp; vidéo" data-speed="15">
                 <td>Surf &amp; vidéo</td>
                 <td>500 Fcfa</td>
-                <td>6 Go</td>
+                <td>7 Go</td>
                 <td>15 Mbps</td>
                 <td>4j</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="4" data-categorie="particulier" data-title="Journée connectée" data-price="1000 Fcfa" data-duration="7j" data-data="15 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="18">
+              <tr class="offer-row" data-idforfait="4" data-categorie="particulier" data-title="Journée connectée" data-price="1000 Fcfa" data-duration="7j" data-data="16 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="18">
                 <td>Journée connectée</td>
                 <td>1000 Fcfa</td>
-                <td>15 Go</td>
+                <td>16 Go</td>
                 <td>18 Mbps</td>
                 <td>7j</td>
                 <td>1</td>
               </tr>
-              <tr class="offer-row" data-idforfait="5" data-categorie="particulier" data-title="Journée connectée" data-price="3000 Fcfa" data-duration="30j" data-data="30 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="20">
+              <tr class="offer-row" data-idforfait="5" data-categorie="particulier" data-title="Journée connectée" data-price="3000 Fcfa" data-duration="30j" data-data="31 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="20">
                 <td>Journée connectée</td>
                 <td>3000 Fcfa</td>
-                <td>30 Go</td>
+                <td>31 Go</td>
                 <td>20 Mbps</td>
                 <td>30j</td>
                 <td>2</td>
               </tr>
-              <tr class="offer-row" data-idforfait="6" data-categorie="particulier" data-title="Journée connectée" data-price="5000 Fcfa" data-duration="30j" data-data="45 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
+              <tr class="offer-row" data-idforfait="6" data-categorie="particulier" data-title="Journée connectée" data-price="5000 Fcfa" data-duration="30j" data-data="46 Go" data-description="Films, gaming, visioconférence. La journée digitale réussie" data-slogan="Journée connectée" data-speed="25">
                 <td>Journée connectée</td>
                 <td>5000 Fcfa</td>
-                <td>45 Go</td>
+                <td>46 Go</td>
                 <td>25 Mbps</td>
                 <td>30j</td>
                 <td>5</td>
@@ -411,25 +456,25 @@
                 <td>Pro HD+</td>
                 <td>15000 Fcfa</td>
                 <td>Illimité</td>
-                <td>3 Mbps</td>
-                <td>2 Mois</td>
-                <td>2</td>
+                <td>20 Mbps</td>
+                <td>1 Mois</td>
+                <td>5</td>
               </tr>
               <tr class="offer-row" data-idforfait="14" data-categorie="particulier" data-title="Pro HD+" data-price="20000 Fcfa" data-duration="3 Mois" data-data="Illimité" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="3">
                 <td>Pro HD+</td>
                 <td>20000 Fcfa</td>
                 <td>Illimité</td>
-                <td>3 Mbps</td>
-                <td>3 Mois</td>
-                <td>2</td>
+                <td>30 Mbps</td>
+                <td>1 Mois</td>
+                <td>7</td>
               </tr>
               <tr class="offer-row" data-idforfait="15" data-categorie="particulier" data-title="Pro HD+" data-price="30000 Fcfa" data-duration="3 Mois" data-data="Illimité" data-description="Streaming 4K, téléchargements. La semaine pro au prix mini" data-slogan="Pro HD+" data-speed="3">
                 <td>Pro HD+</td>
                 <td>30000 Fcfa</td>
                 <td>Illimité</td>
-                <td>3 Mbps</td>
-                <td>3 Mois</td>
-                <td>3</td>
+                <td>40 Mbps</td>
+                <td>1 Mois</td>
+                <td>10</td>
               </tr>
             </tbody>
           </table>
@@ -472,6 +517,7 @@
   </div>
 </main>
 
+<script src="js/visitors.js"></script>
 </body>
 
 <script src="js/tabularform.js"></script>
@@ -523,6 +569,10 @@
       }
     });
   })();
+
+  document.getElementById('mikrotikModal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
 </script>
 
 <script src="js/auth.js"></script>
